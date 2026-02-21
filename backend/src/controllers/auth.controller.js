@@ -9,11 +9,16 @@ const generateToken = (id) => {
 
 // @desc    Register a new user (Athlete or Recruiter)
 // @route   POST /api/auth/register
+// @desc    Register a new user (Athlete or Recruiter)
+// @route   POST /api/auth/register
 exports.register = async (req, res) => {
     try {
-        // We extract the base fields, and bundle the rest into `otherData`
-        // This easily handles the difference between Athlete and Recruiter fields!
-        const { name, email, password, role, location, phoneNumber, ...otherData } = req.body;
+        // Explicitly extract ONLY the allowed fields to prevent stat-stuffing
+        const { 
+            name, email, password, role, location, phoneNumber, 
+            sport, playerRole, subRole, style, bio, height, weight, // Athlete specific
+            organization // Recruiter specific
+        } = req.body;
 
         // 1. Check if user already exists
         const userExists = await User.findOne({ email });
@@ -25,28 +30,33 @@ exports.register = async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        // 3. Create the user in the database
+        // 3. Create the user in the database with ONLY the sanitized fields
         const user = await User.create({
             name,
             email,
-            password: hashedPassword, // Save the hashed version!
+            password: hashedPassword, 
             role,
             location,
             phoneNumber,
-            ...otherData 
+            sport,
+            playerRole,
+            subRole,
+            style,
+            bio,
+            height,
+            weight,
+            organization
         });
 
         // 4. Return success response with cookie
         if (user) {
-            // Generate token ONCE
             const token = generateToken(user._id);
 
-            // Set the token in an HTTP-only cookie
             res.cookie('token', token, {
-                httpOnly: true, // Prevents client-side JS from reading the cookie
-                secure: process.env.NODE_ENV === 'production', // Only sends over HTTPS in production mode
-                sameSite: 'strict', // Prevents CSRF attacks
-                maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
+                httpOnly: true, 
+                secure: process.env.NODE_ENV === 'production', 
+                sameSite: 'strict', 
+                maxAge: 30 * 24 * 60 * 60 * 1000 
             });
 
             res.status(201).json({
@@ -54,7 +64,9 @@ exports.register = async (req, res) => {
                 name: user.name,
                 email: user.email,
                 role: user.role,
-                token // Passing it in the JSON too, so Person 2 can inspect it if needed
+                sport: user.sport,
+                playerRole: user.playerRole,
+                token 
             });
         } else {
             res.status(400).json({ message: 'Invalid user data received' });
@@ -64,7 +76,6 @@ exports.register = async (req, res) => {
         res.status(500).json({ message: 'Server error during registration' });
     }
 };
-
 // @desc    Authenticate a user & get token
 // @route   POST /api/auth/login
 exports.login = async (req, res) => {

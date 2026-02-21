@@ -11,8 +11,14 @@ const userSchema = new mongoose.Schema({
     phoneNumber: { type: String, required: true }, // Crucial for rural access
 
     // Athlete-Specific Fields
-    sport: { type: String },
-    position: { type: String }, // e.g., "Batsman"
+    // Athlete-Specific Fields
+    sport: { 
+        type: String, 
+        enum: ['Cricket', 'Badminton', 'Football'] 
+    },
+    playerRole: { type: String }, // e.g., "Batsman", "Bowler", "All-rounder", "Forward"
+    subRole: { type: String },    // e.g., "Fast", "Spin", "Attacking"
+    style: { type: String },      // e.g., "Wrist", "Finger", "Left-arm"
     bio: { type: String },
     height: { type: String },
     weight: { type: String },
