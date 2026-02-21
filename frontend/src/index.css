@@ -1,10 +1,11 @@
 :root {
-  --bg-color: #0d1117;
-  --card-bg: #1a2332;
-  --accent-color: #f4a014;
+  /* Theme: Arctic Precision */
+  --bg-color: #0a1128;
+  --card-bg: #16213e;
+  --accent-color: #00e5ff;
   --text-main: #ffffff;
-  --text-muted: #8a9bb0;
-  
+  --text-muted: #b4c5e4;
+
   --font-heading: 'Bebas Neue', sans-serif;
   --font-label: 'Barlow Condensed', sans-serif;
   --font-body: 'Barlow', sans-serif;

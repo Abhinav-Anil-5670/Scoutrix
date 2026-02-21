@@ -42,8 +42,8 @@ const HeroSection = () => {
                 <div className="visual-composition">
                     <div className="image-wrapper">
                         <img
-                            src="https://images.unsplash.com/photo-1552674605-db6ffd4facb5?q=80&w=2670&auto=format&fit=crop"
-                            alt="Sprinter on track"
+                            src="https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=2670&auto=format&fit=crop"
+                            alt="Foot on a football under stadium lights"
                             className="hero-image"
                         />
                         <div className="glow-overlay"></div>
