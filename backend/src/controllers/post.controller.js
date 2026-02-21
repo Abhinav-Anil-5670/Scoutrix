@@ -51,12 +51,46 @@ exports.uploadVideo = async (req, res) => {
             throw new Error("Gemini AI failed to process the video.");
         }
 
-        // 6. The Magic AI Prompt
-        const prompt = `You are an elite sports scout. Analyze this cricket video. 
-        Extract the following metrics: 'footwork_score' (1-10), 'timing_score' (1-10), 'shot_type', and a 'scout_summary' (max 20 words). 
-        Return ONLY a valid JSON object. No markdown, no extra text.`;
+        // ... (Previous code: video uploads to ImageKit and Gemini, and polling finishes)
 
-        // 7. Generate Content using the cutting-edge model
+        // 6. Define the expected JSON keys based on the Athlete's profile
+        const { sport, playerRole, subRole, style } = req.user;
+        let expectedMetrics = "";
+
+        if (sport === 'Cricket') {
+            if (playerRole === 'Batsman' || playerRole === 'All-Rounder') {
+                expectedMetrics = "'footwork_score' (1-10), 'timing_score' (1-10), 'shot_selection' (1-10), 'signature_shot' (String)";
+            } else if (playerRole === 'Bowler') {
+                expectedMetrics = "'run_up_balance' (1-10), 'release_point_score' (1-10), 'line_and_length_rating' (1-10), 'stock_delivery' (String)";
+            }
+        } else if (sport === 'Badminton') {
+            expectedMetrics = "'court_coverage' (1-10), 'smash_power' (1-10), 'reflex_speed' (1-10), 'dominant_stroke' (String)";
+        } else if (sport === 'Football') {
+            expectedMetrics = "'ball_control' (1-10), 'agility_score' (1-10), 'passing_accuracy' (1-10), 'play_style' (String)";
+        } else {
+            // A generic fallback just in case
+            expectedMetrics = "'athleticism_score' (1-10), 'technique_rating' (1-10), 'game_awareness' (1-10), 'primary_strength' (String)";
+        }
+
+        // 7. The Magic Dynamic Prompt
+        const prompt = `You are an elite sports scout analyzing a video of a grassroots athlete.
+        
+        ATHLETE PROFILE:
+        - Sport: ${sport || 'Unknown'}
+        - Role: ${playerRole || 'General Athlete'}
+        - Position/Sub-Role: ${subRole || 'N/A'}
+        - Playing Style: ${style || 'N/A'}
+
+        INSTRUCTIONS:
+        Watch the video and evaluate this athlete specifically through the lens of their profile (e.g., if they are a Wrist Spin Bowler, look for flight and turn; if an Aggressive Batsman, look for bat speed).
+
+        Extract the following specific metrics: 
+        ${expectedMetrics}
+        And provide a 'scout_summary' (max 20 words highlighting their potential).
+
+        Return ONLY a valid JSON object with those exact keys. No markdown, no conversational text, no extra properties.`;
+
+        // 8. Generate Content using the cutting-edge model
         const response = await ai.models.generateContent({
             model: "gemini-3-flash-preview",
             contents: createUserContent([
@@ -65,12 +99,14 @@ exports.uploadVideo = async (req, res) => {
             ]),
         });
 
-        // 8. Parse the AI Response 
+        // 9. Parse the AI Response 
         const responseText = response.text;
         const cleanJson = responseText.replace(/```json/g, '').replace(/```/g, '').trim();
         const aiMetrics = JSON.parse(cleanJson);
 
-        // 9. Save the final "Stat Card" to MongoDB
+        // ... (Continue to Step 10: Saving to MongoDB)
+
+        // 10. Save the final "Stat Card" to MongoDB
         const post = await Post.create({
             athleteId: req.user._id, // Secured by your Auth Middleware
             videoUrl: videoUrl,
@@ -78,7 +114,7 @@ exports.uploadVideo = async (req, res) => {
             scoutSummary: aiMetrics.scout_summary || aiMetrics.scoutSummary
         });
 
-        // 10. Delete the temporary file from your local Node server
+        // 11. Delete the temporary file from your local Node server
         fs.unlinkSync(filePath);
 
         // Send the completed object back to the frontend
@@ -99,7 +135,7 @@ exports.uploadVideo = async (req, res) => {
 exports.getFeed = async (req, res) => {
     try {
         const posts = await Post.find()
-            .populate('athleteId', 'name location sport position bio')
+            .populate('athleteId', 'name location sport playerRole subRole style bio')
             .sort({ createdAt: -1 }); 
             
         res.status(200).json(posts);
