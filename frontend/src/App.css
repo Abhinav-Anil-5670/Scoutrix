@@ -1,0 +1,195 @@
+/* Navigation Tabs */
+.nav-tabs-container {
+  display: flex;
+  width: 100%;
+  background-color: var(--bg-color);
+  border-bottom: 2px solid #1a2332;
+}
+
+.nav-tab {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.75rem 2.5rem;
+  background: transparent;
+  border: none;
+  border-right: 1px solid #1a2332;
+  color: var(--text-main);
+  font-family: var(--font-label);
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-tab:last-child {
+  border-right: none;
+}
+
+.nav-tab::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 0;
+  width: 100%;
+  background-color: rgba(244, 160, 20, 0.08);
+  transition: height 0.3s ease;
+  z-index: 0;
+}
+
+.nav-tab:hover::before {
+  height: 100%;
+}
+
+.nav-tab span {
+  position: relative;
+  z-index: 1;
+}
+
+.nav-tab .arrow {
+  color: var(--accent-color);
+  font-size: 1.75rem;
+  font-weight: 400;
+  opacity: 0;
+  transform: translateX(-15px);
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-body);
+  /* For a clean arrow */
+}
+
+.nav-tab:hover .arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.nav-tab:hover {
+  color: var(--accent-color);
+}
+
+/* Feature Cards Grid */
+.features-section {
+  padding: 6rem 3rem;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.feature-card {
+  background-color: var(--card-bg);
+  padding: 3rem 2.5rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.feature-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background-color: var(--accent-color);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.feature-card:hover {
+  transform: translateY(-8px);
+  /* slight brightening on hover */
+  background-color: #1e2838;
+}
+
+.feature-card:hover::after {
+  transform: scaleX(1);
+}
+
+.icon-wrapper {
+  margin-bottom: 2rem;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* subtle rounding on icons only */
+  border-radius: 6px;
+  color: var(--accent-color);
+}
+
+.feature-title {
+  font-family: var(--font-heading);
+  font-size: 2.5rem;
+  letter-spacing: 0.05em;
+  margin-bottom: 1.25rem;
+  font-weight: 400;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.feature-desc {
+  color: var(--text-muted);
+  font-size: 1.125rem;
+  line-height: 1.6;
+  margin-bottom: 2.5rem;
+  flex-grow: 1;
+}
+
+.learn-more {
+  color: var(--accent-color);
+  font-family: var(--font-label);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  transition: gap 0.3s ease;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.learn-more:hover {
+  gap: 16px;
+}
+
+/* Responsive Overrides */
+@media (max-width: 1200px) {
+  .features-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .nav-tabs-container {
+    flex-direction: column;
+  }
+
+  .nav-tab {
+    border-right: none;
+    border-bottom: 1px solid #1a2332;
+  }
+
+  .nav-tab:last-child {
+    border-bottom: none;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
