@@ -26,7 +26,11 @@ const userSchema = new mongoose.Schema({
     scoutScore: {
         metaScore: { type: Number, default: 0 }, // The 0-1000 master score
         sportScore: { type: Number, default: 0 }, // The 0-1000 athletic rating
-        subScores: { type: mongoose.Schema.Types.Mixed, default: {} } // The raw AI metrics
+        subScores: { type: mongoose.Schema.Types.Mixed, default: {} }, // The raw AI metrics
+        history: [{
+            score: { type: Number },
+            date: { type: Date, default: Date.now }
+        }]
     },
 
     // Recruiter-Specific Fields
