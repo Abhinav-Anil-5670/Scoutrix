@@ -3,7 +3,8 @@
     align-items: center;
     justify-content: space-between;
     min-height: calc(100vh - 90px);
-    padding: 4rem 3rem 6rem;
+    padding: 10rem 3rem 6rem;
+    /* Substantially increased top padding to prevent navbar overlap */
     max-width: 1600px;
     margin: 0 auto;
     gap: 4rem;

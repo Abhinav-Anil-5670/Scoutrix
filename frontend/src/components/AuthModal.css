@@ -1,0 +1,596 @@
+/* FULL SCREEN MODAL OVERLAY */
+.auth-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(10, 17, 40, 0.7);
+    /* Deep arctic backdrop */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    animation: modalFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        backdrop-filter: blur(0px);
+    }
+
+    to {
+        opacity: 1;
+        backdrop-filter: blur(12px);
+    }
+}
+
+/* Close Button */
+.close-modal-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    color: #cbd5e1;
+    cursor: pointer;
+    z-index: 105;
+    padding: 8px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.close-modal-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    transform: rotate(90deg);
+}
+
+.auth-container {
+    background: #ffffff;
+    /* Lighter theme frame */
+    border-radius: 20px;
+    /* softer brutalist curve */
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6),
+        inset 0 0 0 1px rgba(0, 229, 255, 0.4);
+    position: relative;
+    overflow: hidden;
+    width: 900px;
+    max-width: 100%;
+    height: 550px;
+    z-index: 10;
+    animation: modalScaleUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalScaleUp {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* --- Form Containers --- */
+.form-container {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Apply light theme to the form canvas */
+.auth-form.light-theme-form {
+    background: #f8fafc;
+    /* Sleek slate body */
+    display: flex;
+    flex-direction: column;
+    padding: 30px 40px;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.auth-form.light-theme-form .form-title {
+    font-family: var(--font-heading);
+    font-size: 2.5rem;
+    color: #0f172a;
+    /* Slate 900 */
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+}
+
+.auth-form.light-theme-form .form-subtitle {
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    color: #64748b;
+    /* Slate 500 */
+    margin-bottom: 2rem;
+    margin-top: 1rem;
+}
+
+/* Inputs and Selects styling across forms (Light Theme) */
+.auth-form.light-theme-form input,
+.auth-form.light-theme-form textarea,
+.auth-form.light-theme-form select {
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    padding: 12px 16px;
+    margin: 6px 0;
+    width: 100%;
+    border-radius: 8px;
+    /* Softer inputs */
+    color: #0f172a;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.auth-form.light-theme-form input::placeholder,
+.auth-form.light-theme-form textarea::placeholder {
+    color: #94a3b8;
+}
+
+/* Dropdown arrow for selects */
+.auth-form.light-theme-form select {
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1.2em;
+    padding-right: 2.5rem;
+    cursor: pointer;
+}
+
+/* Disabled dropdowns */
+.auth-form.light-theme-form select:disabled {
+    background-color: #f1f5f9;
+    color: #94a3b8;
+    cursor: not-allowed;
+    border-color: #e2e8f0;
+}
+
+.auth-form.light-theme-form input:focus,
+.auth-form.light-theme-form textarea:focus,
+.auth-form.light-theme-form select:focus:not(:disabled) {
+    outline: none;
+    border-color: #00e5ff;
+    /* Cyan focus */
+    box-shadow: 0 0 0 4px rgba(0, 229, 255, 0.1);
+    background: #ffffff;
+}
+
+.input-row {
+    display: flex;
+    width: 100%;
+    gap: 16px;
+}
+
+/* Specific to the longer Signup form scroll area */
+.form-scroll-area {
+    width: 100%;
+    max-height: 400px;
+    /* Reduced from 400 to account for extra padding above/below */
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    padding-right: 15px;
+    /* space for scrollbar */
+    margin-bottom: 2rem;
+    /* Fade out top/bottom to signify scrolling */
+    mask-image: linear-gradient(to bottom, transparent, black 5%, black 95%, transparent);
+    -webkit-mask-image: linear-gradient(to bottom, transparent, black 1%, black 95%, transparent);
+    padding-top: 15px;
+}
+
+/* Custom Webkit scrollbar for form (Light Theme) */
+.form-scroll-area::-webkit-scrollbar {
+    width: 6px;
+}
+
+.form-scroll-area::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.form-scroll-area::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+
+.form-scroll-area::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+.auth-form.light-theme-form .forgot-password {
+    color: #64748b;
+    font-size: 0.95rem;
+    text-decoration: none;
+    margin: 20px 0;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.auth-form.light-theme-form .forgot-password:hover {
+    color: #0f172a;
+    text-decoration: underline;
+}
+
+.btn-auth-submit {
+    background: linear-gradient(135deg, var(--accent-color) 0%, #3a86ff 100%);
+    border: none;
+    border-radius: 8px;
+    color: #0d1117;
+    padding: 0.85rem 2.5rem;
+    font-family: var(--font-label);
+    font-size: 1rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: 0 10px 20px rgba(0, 229, 255, 0.2);
+    margin-top: auto;
+    /* Push down to bottom */
+    width: 100%;
+}
+
+.btn-auth-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 25px rgba(0, 229, 255, 0.4);
+}
+
+
+/* --- THE PHYSICAL ROLLER PILL TOGGLE --- */
+.role-toggle-wrapper {
+    display: flex;
+    background: #e2e8f0;
+    border-radius: 99px;
+    /* full pill */
+    padding: 6px;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+    width: 100%;
+    position: relative;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* The sliding background block */
+.role-slider-bg {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: calc(50% - 6px);
+    /* Half minus padding */
+    height: calc(100% - 12px);
+    background: #ffffff;
+    border-radius: 99px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1;
+    /* Sits UNDER the text */
+}
+
+/* Slide it over to the second half! */
+.role-slider-bg.slide-right {
+    transform: translateX(100%);
+}
+
+.role-toggle-btn {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: #64748b;
+    padding: 0.75rem;
+    border-radius: 99px;
+    cursor: pointer;
+    font-family: var(--font-label);
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: color 0.4s ease;
+    position: relative;
+    z-index: 2;
+    /* Sits OVER the slider */
+}
+
+.role-toggle-btn.active {
+    color: #0f172a;
+}
+
+.conditional-fields {
+    width: 100%;
+    animation: fadeInForm 0.4s ease forwards;
+    opacity: 0;
+}
+
+@keyframes fadeInForm {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* --- SLIDING ANIMATION LOGIC --- */
+
+.sign-in-container {
+    left: 0;
+    width: 50%;
+    z-index: 2;
+}
+
+.sign-up-container {
+    left: 0;
+    width: 50%;
+    opacity: 0;
+    z-index: 1;
+}
+
+.auth-container.right-panel-active .sign-in-container {
+    transform: translateX(100%);
+    opacity: 0;
+    z-index: 1;
+}
+
+.auth-container.right-panel-active .sign-up-container {
+    transform: translateX(100%);
+    opacity: 1;
+    z-index: 5;
+    animation: show 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes show {
+
+    0%,
+    49.99% {
+        opacity: 0;
+        z-index: 1;
+    }
+
+    50%,
+    100% {
+        opacity: 1;
+        z-index: 5;
+    }
+}
+
+/* --- OVERLAY STYLING --- */
+.overlay-container {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 50%;
+    height: 100%;
+    overflow: hidden;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 100;
+    border-radius: 0 20px 20px 0;
+}
+
+.auth-container.right-panel-active .overlay-container {
+    transform: translateX(-100%);
+    border-radius: 20px 0 0 20px;
+}
+
+.overlay {
+    position: relative;
+    left: -100%;
+    height: 100%;
+    width: 200%;
+    transform: translateX(0);
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* Darkened gradient over image for better contrast */
+    background-image:
+        linear-gradient(135deg, rgba(10, 17, 40, 0.95) 0%, rgba(0, 150, 180, 0.6) 100%),
+        url('https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=2670&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
+    background-blend-mode: overlay;
+}
+
+.auth-container.right-panel-active .overlay {
+    transform: translateX(50%);
+}
+
+.overlay-panel {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 0 50px;
+    text-align: center;
+    top: 0;
+    height: 100%;
+    width: 50%;
+    transform: translateX(0);
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    color: #ffffff;
+}
+
+/* OVERLAY TEXT CONTRAST DEEP SHADOW */
+.overlay-title.has-shadow {
+    font-family: var(--font-heading);
+    font-size: 2.8rem;
+    margin-bottom: 0.75rem;
+    letter-spacing: 0.02em;
+    line-height: 1.1;
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.8), 0 2px 4px rgba(0, 0, 0, 0.5);
+    /* Deep shadow */
+}
+
+.overlay-desc.has-shadow {
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    margin-bottom: 2rem;
+    color: #f8fafc;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 1);
+    /* Deep drop shadow */
+}
+
+.overlay-left {
+    transform: translateX(-20%);
+}
+
+.auth-container.right-panel-active .overlay-left {
+    transform: translateX(0);
+}
+
+.overlay-right {
+    right: 0;
+    transform: translateX(0);
+}
+
+.auth-container.right-panel-active .overlay-right {
+    transform: translateX(20%);
+}
+
+.btn-secondary.ghost {
+    background-color: transparent;
+    border: 2px solid #ffffff;
+    color: #ffffff;
+    padding: 0.75rem 3rem;
+    border-radius: 8px;
+    font-family: var(--font-label);
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    transition: all 0.3s ease;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.btn-secondary.ghost:hover {
+    background-color: #ffffff;
+    color: #0b1a30;
+    text-shadow: none;
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+
+/* --- RESPONSIVE DESIGN FOR MOBILE --- */
+@media (max-width: 900px) {
+    .auth-modal-overlay {
+        padding: 0;
+        align-items: flex-end;
+        /* Drop to bottom like a sheet on mobile */
+    }
+
+    .auth-container {
+        min-height: 85vh;
+        border-radius: 20px 20px 0 0;
+        height: 85vh;
+    }
+
+    /* Stack the overlay ON TOP of the forms */
+    .sign-in-container,
+    .sign-up-container {
+        width: 100%;
+        left: 0;
+        top: 250px;
+        height: calc(100% - 250px);
+    }
+
+    .overlay-container {
+        width: 100%;
+        height: 250px;
+        left: 0;
+        top: 0;
+        border-radius: 20px 20px 0 0;
+    }
+
+    .auth-container.right-panel-active .sign-in-container,
+    .auth-container.right-panel-active .sign-up-container {
+        transform: translateX(0);
+    }
+
+    .auth-container.right-panel-active .overlay-container {
+        transform: translateX(0);
+        border-radius: 20px 20px 0 0;
+    }
+
+    .overlay {
+        left: 0;
+        width: 100%;
+        transform: translateX(0);
+    }
+
+    .auth-container.right-panel-active .overlay {
+        transform: translateX(0);
+    }
+
+    .overlay-panel {
+        width: 100%;
+        padding: 0 20px;
+    }
+
+    .overlay-left {
+        transform: translateX(0);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .auth-container.right-panel-active .overlay-left {
+        transform: translateX(0);
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .overlay-right {
+        transform: translateX(0);
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .auth-container.right-panel-active .overlay-right {
+        transform: translateX(0);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .auth-form.light-theme-form {
+        padding: 20px 30px;
+    }
+
+    .overlay-title.has-shadow {
+        font-size: 2.2rem;
+    }
+
+    .auth-form.light-theme-form .form-title {
+        font-size: 2rem;
+    }
+
+    .input-row {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .form-scroll-area {
+        max-height: 100%;
+        overflow-y: visible;
+        mask-image: none;
+        -webkit-mask-image: none;
+    }
+}
