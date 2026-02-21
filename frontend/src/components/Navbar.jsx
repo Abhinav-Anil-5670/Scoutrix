@@ -5,10 +5,10 @@ import './Navbar.css';
 const Navbar = ({ onOpenAuth }) => {
     const tabs = [
         { name: 'ABOUT US', path: '/about' },
-        { name: 'FOR ATHLETES', path: '#' },
-        { name: 'FOR SCOUTS', path: '#' },
-        { name: 'BY SPORT', path: '#' },
-        { name: 'BY REGION', path: '#' }
+        { name: 'FOR ATHLETES', path: '/athletes' },
+        { name: 'FOR SCOUTS', path: '/scouts' },
+        { name: 'BY SPORT', path: '/sports' },
+        { name: 'BY REGION', path: '/regions' }
     ];
 
     return (
