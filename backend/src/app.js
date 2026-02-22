@@ -13,10 +13,17 @@ const translateRoutes = require('./routes/translate.routes');
 const app = express();
 
 // Middleware
+// Middleware
 app.use(cors({
-    origin: ['http://localhost:5173', 'scoutrix-three.vercel.app'],
-    credentials: true
-})); // Allows frontend to talk to backend
+    origin: [
+        'http://localhost:5173',
+        'https://scoutrix-three.vercel.app',
+        'https://scoutrix-gxsrph51c-abhinav-anils-projects.vercel.app' // Add the specific preview URL from your error
+    ],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Explicitly allow preflight methods
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 app.use(cookieParser());
 
