@@ -115,6 +115,15 @@ exports.recalculateScoutScore = async (athleteId) => {
 
         const metaScore = Math.round(aiWeightedScore + validationScore + activityScore);
 
+        const currentHistory = athlete.scoutScore?.history || [];
+
+        if (currentHistory.length === 0 || currentHistory[currentHistory.length - 1].score !== metaScore) {
+            currentHistory.push({
+                score: metaScore,
+                date: new Date()
+            });
+        }
+
         // Save everything back to the Athlete's profile
         athlete.metaScore = metaScore;
         athlete.sportScore = sportScore;

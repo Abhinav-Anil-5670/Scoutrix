@@ -222,3 +222,94 @@ const mailOptions = {
         res.status(500).json({ message: 'Server error sending invite' });
     }
 };
+
+// @desc    Search and filter athletes dynamically (For Recruiters)
+// @route   GET /api/users/search
+exports.searchAthletes = async (req, res) => {
+    try {
+        // 1. Create a shallow copy of the incoming query parameters
+        const reqQuery = { ...req.query };
+
+        // 2. Define the "Special Fields" that require custom MongoDB math/regex logic
+        const specialFields = ['location', 'minAge', 'maxAge', 'minScore', 'limit', 'page'];
+
+        // 3. Delete those special fields from our reqQuery copy
+        // What remains in reqQuery are exact-match filters (sport, playerRole, subRole, style, etc.)
+        specialFields.forEach(param => delete reqQuery[param]);
+
+        // 4. Initialize the database query with the remaining dynamic exact matches
+        let query = { ...reqQuery, role: 'athlete' };
+
+        // 5. Now handle the special fields we extracted from the original req.query
+        
+        // Location (Case-insensitive partial match)
+        if (req.query.location) {
+            query.location = { $regex: req.query.location, $options: 'i' };
+        }
+
+        // Age Range
+        if (req.query.minAge || req.query.maxAge) {
+            query.age = {};
+            if (req.query.minAge) query.age.$gte = Number(req.query.minAge);
+            if (req.query.maxAge) query.age.$lte = Number(req.query.maxAge);
+        }
+
+        // Scoutrix MetaScore Threshold
+        if (req.query.minScore) {
+            query['scoutScore.metaScore'] = { $gte: Number(req.query.minScore) };
+        }
+
+        // 6. Execute the dynamic query!
+        const athletes = await User.find(query)
+            .sort({ 'scoutScore.metaScore': -1 }) // Highest score first
+            .select('-password') // Never send passwords to the frontend
+            .limit(Number(req.query.limit) || 50); // Optional limit parameter
+
+        res.status(200).json({
+            success: true,
+            count: athletes.length,
+            data: athletes
+        });
+
+    } catch (error) {
+        console.error("Search Error:", error);
+        res.status(500).json({ message: "Error searching athletes" });
+    }
+};
+
+// @desc    Get Top 10 Athletes by Region and/or Sport
+// @route   GET /api/users/leaderboard
+exports.getRegionalLeaderboard = async (req, res) => {
+    try {
+        const { location, sport, limit } = req.query;
+
+        // 1. Base query: Only look at athletes
+        let query = { role: 'athlete' };
+
+        // 2. Filter by City Name (Case-Insensitive)
+        if (location) {
+            query.location = { $regex: location, $options: 'i' };
+        }
+
+        // 3. Optional: Filter by Sport (e.g., "Top 10 Footballers in Kochi")
+        if (sport) {
+            query.sport = sport;
+        }
+
+        // 4. Execute Query, Sort, and Limit
+        const leaderboard = await User.find(query)
+            .sort({ 'scoutScore.metaScore': -1 }) // The Magic: -1 means Descending (Highest to Lowest)
+            .limit(Number(limit) || 10) // Default to Top 10 if no limit is provided
+            .select('name location sport playerRole scoutScore.metaScore profileImage'); // Keep payload light
+
+        res.status(200).json({
+            success: true,
+            title: `Top ${leaderboard.length} Athletes${location ? ' in ' + location : ''}`,
+            data: leaderboard
+        });
+
+    } catch (error) {
+        console.error("Leaderboard Error:", error);
+        res.status(500).json({ message: "Error fetching leaderboard" });
+    }
+};
