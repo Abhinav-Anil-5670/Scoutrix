@@ -27,7 +27,7 @@ exports.uploadVideo = async (req, res) => {
         // 3. Upload to ImageKit (Node.js SDK method)
         // We use createReadStream to safely handle potentially large video files
         const imageKitResponse = await imagekit.upload({
-            file: fs.createReadStream(filePath), 
+            file: fs.createReadStream(filePath),
             fileName: `athlete_video_${Date.now()}_${req.file.originalname}`,
             folder: '/hackathon_videos'
         });
@@ -41,7 +41,7 @@ exports.uploadVideo = async (req, res) => {
 
         // 5. Polling: Wait for Google's servers to process the video
         let getFile = await ai.files.get({ name: myfile.name });
-        
+
         while (getFile.state === 'PROCESSING') {
             console.log('Video is processing by Gemini, retrying in 3 seconds...');
             await new Promise((resolve) => setTimeout(resolve, 3000));
@@ -127,7 +127,7 @@ exports.uploadVideo = async (req, res) => {
 
     } catch (error) {
         console.error("Video Pipeline Error:", error);
-        
+
         if (req.file && fs.existsSync(req.file.path)) {
             fs.unlinkSync(req.file.path);
         }
@@ -141,11 +141,24 @@ exports.getFeed = async (req, res) => {
     try {
         const posts = await Post.find()
             .populate('athleteId', 'name location sport playerRole subRole style bio')
-            .sort({ createdAt: -1 }); 
-            
+            .sort({ createdAt: -1 });
+
         res.status(200).json(posts);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Server error fetching feed' });
+    }
+};
+
+// @desc    Get logged-in athlete's own posts
+// @route   GET /api/videos/my-posts
+exports.getUserPosts = async (req, res) => {
+    try {
+        const posts = await Post.find({ athleteId: req.user._id })
+            .sort({ createdAt: -1 });
+        res.status(200).json(posts);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error fetching your posts' });
     }
 };

@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const userSchema = new mongoose.Schema({
     // Common Fields
     name: { type: String, required: true },
-    age : { type: Number, required: true },
+    age: { type: Number },                // optional — recruiters may not set it
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     role: { type: String, enum: ['athlete', 'recruiter'], required: true },
@@ -13,9 +13,9 @@ const userSchema = new mongoose.Schema({
 
     // Athlete-Specific Fields
     // Athlete-Specific Fields
-    sport: { 
-        type: String, 
-        enum: ['Cricket', 'Badminton', 'Football'] 
+    sport: {
+        type: String,
+        enum: { values: ['Cricket', 'Badminton', 'Football'], message: '`{VALUE}` is not a valid sport' },
     },
     playerRole: { type: String }, // e.g., "Batsman", "Bowler", "All-rounder", "Forward"
     subRole: { type: String },    // e.g., "Fast", "Spin", "Attacking"
@@ -23,20 +23,14 @@ const userSchema = new mongoose.Schema({
     bio: { type: String },
     height: { type: String },
     weight: { type: String },
-    scoutScore: {
-        metaScore: { type: Number, default: 0 }, // The 0-1000 master score
-        sportScore: { type: Number, default: 0 }, // The 0-1000 athletic rating
-        subScores: { type: mongoose.Schema.Types.Mixed, default: {} }, // The raw AI metrics
-        history: [{
-            score: { type: Number },
-            date: { type: Date, default: Date.now }
-        }]
-    },
+    metaScore: { type: Number, default: 0 }, // The 0-1000 master score
+    sportScore: { type: Number, default: 0 }, // The 0-1000 athletic rating
+    subScores: { type: mongoose.Schema.Types.Mixed, default: {} }, // The raw AI metrics
 
     // Recruiter-Specific Fields
     organization: { type: String }, // e.g., "Local Cricket Academy"
     savedPlayers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
-}, { 
+}, {
     timestamps: true // Automatically adds createdAt and updatedAt
 });
 

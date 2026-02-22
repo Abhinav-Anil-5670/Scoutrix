@@ -6,11 +6,16 @@ const cors = require('cors');
 const authRoutes = require('./routes/auth.routes');
 const postRoutes = require('./routes/post.routes');
 const userRoutes = require('./routes/user.routes');
+const opportunityRoutes = require('./routes/opportunity.routes');
+const recruitRoutes = require('./routes/recruit.routes');
 
 const app = express();
 
 // Middleware
-app.use(cors({ origin: true, credentials: true })); // Allows frontend to talk to backend
+app.use(cors({
+    origin: 'http://localhost:5173',
+    credentials: true
+})); // Allows frontend to talk to backend
 app.use(express.json());
 app.use(cookieParser());
 
@@ -18,6 +23,8 @@ app.use(cookieParser());
 app.use('/api/auth', authRoutes);
 app.use('/api', postRoutes);
 app.use('/api', userRoutes);
+app.use('/api/opportunities', opportunityRoutes);
+app.use('/api/recruit', recruitRoutes);
 
 // A simple health-check route to test the server
 app.get('/health', (req, res) => {

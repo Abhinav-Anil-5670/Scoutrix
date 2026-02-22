@@ -44,9 +44,9 @@ exports.recalculateScoutScore = async (athleteId) => {
         // PILLAR 2: RECRUITER VALIDATION (Max 300)
         // ==========================================
         // Count how many recruiters have this athlete in their savedPlayers array
-        const savesCount = await User.countDocuments({ 
-            role: 'recruiter', 
-            savedPlayers: athleteId 
+        const savesCount = await User.countDocuments({
+            role: 'recruiter',
+            savedPlayers: athleteId
         });
 
         // 50 points per recruiter save, capped at 300 maximum
@@ -65,7 +65,7 @@ exports.recalculateScoutScore = async (athleteId) => {
 
             recentPosts.forEach(post => {
                 if (!post.aiMetrics) return;
-                
+
                 // Loop through keys like 'timing_score', 'footwork_score'
                 Object.keys(post.aiMetrics).forEach(key => {
                     const value = post.aiMetrics[key];
@@ -89,7 +89,7 @@ exports.recalculateScoutScore = async (athleteId) => {
                 // Average the 1-10 score, then multiply by 100
                 const averageScore = (metricSums[key] / metricCounts[key]) * 100;
                 subScores[key] = Math.round(averageScore);
-                
+
                 totalAveragedMetrics += averageScore;
                 metricTypesCount += 1;
             });
@@ -111,8 +111,8 @@ exports.recalculateScoutScore = async (athleteId) => {
         // FINAL: THE METASCORE CALCULATION
         // ==========================================
         // AI is worth 50% of the total rating
-        const aiWeightedScore = sportScore * 0.50; 
-        
+        const aiWeightedScore = sportScore * 0.50;
+
         const metaScore = Math.round(aiWeightedScore + validationScore + activityScore);
 
         const currentHistory = athlete.scoutScore?.history || [];
@@ -125,12 +125,9 @@ exports.recalculateScoutScore = async (athleteId) => {
         }
 
         // Save everything back to the Athlete's profile
-        athlete.scoutScore = {
-            metaScore: metaScore,
-            sportScore: sportScore,
-            subScores: subScores,
-            history: currentHistory
-        };
+        athlete.metaScore = metaScore;
+        athlete.sportScore = sportScore;
+        athlete.subScores = subScores;
 
         await athlete.save();
         console.log(`Successfully updated Scoutrix Score for ${athlete.name}: Meta(${metaScore})`);
