@@ -1,0 +1,741 @@
+/* ============================================================
+   PROFILE PAGE — Manrope font, theme-aware CSS variables
+   ============================================================ */
+
+.pfp-page {
+    min-height: 100%;
+    font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    padding: 0 0 60px;
+    background: transparent;
+}
+
+/* ── Hero band ── */
+.pfp-hero {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+    padding: 24px 20px 20px;
+    background: var(--bg-surface, rgba(255, 255, 255, 0.03));
+    border-bottom: 1px solid var(--border, rgba(255, 255, 255, 0.07));
+    overflow: hidden;
+    flex-wrap: wrap;
+}
+
+.pfp-hero-bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+/* Left column: avatar → name → location → contacts */
+.pfp-left-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+    min-width: 90px;
+}
+
+/* Avatar */
+.pfp-avatar-wrap {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.pfp-avatar {
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    font-weight: 900;
+    color: #fff;
+    position: relative;
+    z-index: 1;
+}
+
+.pfp-avatar-ring {
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 2px solid;
+    animation: pfp-spin-slow 6s linear infinite;
+}
+
+@keyframes pfp-spin-slow {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Info */
+.pfp-hero-info {
+    flex: 1;
+    min-width: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.pfp-name-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+}
+
+.pfp-name {
+    font-size: clamp(16px, 2.5vw, 22px);
+    font-weight: 900;
+    color: var(--text-primary, #f1f5f9);
+    margin: 0;
+    letter-spacing: -0.4px;
+    text-align: center;
+}
+
+.pfp-sport-badge {
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    border: 1px solid;
+    border-radius: 20px;
+    padding: 2px 10px;
+}
+
+.pfp-role {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary, #94a3b8);
+    margin: 0;
+}
+
+.pfp-location {
+    font-size: 11px;
+    color: var(--text-muted, #64748b);
+    margin: 0;
+    text-align: center;
+}
+
+.pfp-bio {
+    font-size: 12px;
+    color: var(--text-secondary, #94a3b8);
+    margin: 2px 0 0;
+    line-height: 1.55;
+    max-width: 300px;
+}
+
+/* Contact buttons row */
+.pfp-contact-row {
+    display: flex;
+    gap: 6px;
+    margin-top: 4px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.pfp-contact-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    background: rgba(var(--c-rgb, 0, 229, 160), 0.07);
+    border: 1px solid rgba(var(--c-rgb, 0, 229, 160), 0.2);
+    border-radius: 10px;
+    padding: 7px 10px;
+    color: var(--c, #00e5a0);
+    text-decoration: none;
+    transition: background 0.2s ease, transform 0.15s ease;
+    min-width: 46px;
+}
+
+.pfp-contact-btn:hover {
+    background: rgba(var(--c-rgb, 0, 229, 160), 0.15);
+    transform: translateY(-2px);
+}
+
+.pfp-contact-btn svg {
+    width: 18px;
+    height: 18px;
+    display: block;
+}
+
+.pfp-contact-btn span {
+    font-size: 8px;
+    font-weight: 800;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+}
+
+.pfp-quick-stats {
+    display: flex;
+    gap: 18px;
+}
+
+.pfp-qs {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.pfp-qs span {
+    font-size: 18px;
+    font-weight: 900;
+    color: var(--text-primary, #f1f5f9);
+    line-height: 1;
+}
+
+.pfp-qs small {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--text-muted, #64748b);
+    text-transform: uppercase;
+}
+
+/* Scout score outer circle border */
+.pfp-score-outer-ring {
+    width: 112px;
+    height: 112px;
+    border-radius: 50%;
+    border: 2px solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-primary, rgba(0, 0, 0, 0.2));
+}
+
+.pfp-score-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+    margin-left: auto;
+}
+
+.pfp-score-ring-wrap {
+    position: relative;
+}
+
+.pfp-ring-center {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.pfp-ring-center small {
+    font-size: 9px;
+    color: var(--text-muted, #64748b);
+    font-weight: 700;
+}
+
+.pfp-score-label {
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: var(--text-muted, #64748b);
+    text-transform: uppercase;
+    margin: 0;
+}
+
+.pfp-sport-score {
+    font-size: 11px;
+    font-weight: 700;
+    margin-top: 2px;
+}
+
+/* ── Tab bar ── */
+.pfp-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border, rgba(255, 255, 255, 0.07));
+    padding: 0 20px;
+    gap: 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.pfp-tabs::-webkit-scrollbar {
+    display: none;
+}
+
+.pfp-tab {
+    background: none;
+    border: none;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-muted, #64748b);
+    padding: 14px 18px;
+    cursor: pointer;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s ease, border-color 0.2s ease;
+    margin-bottom: -1px;
+}
+
+.pfp-tab.active {
+    color: var(--c, #00e5a0);
+    border-bottom-color: var(--c, #00e5a0);
+}
+
+.pfp-tab:hover:not(.active) {
+    color: var(--text-secondary, #94a3b8);
+}
+
+/* ── Tab content ── */
+.pfp-tab-content {
+    padding: 24px 24px 0;
+}
+
+/* Loading state */
+.pfp-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    padding: 60px 0;
+    color: var(--text-muted, #64748b);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.pfp-spinner {
+    width: 28px;
+    height: 28px;
+    border: 3px solid rgba(255, 255, 255, 0.07);
+    border-radius: 50%;
+    animation: pfp-spin 0.7s linear infinite;
+}
+
+@keyframes pfp-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ── Section shared ── */
+.pfp-section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.pfp-section-title {
+    font-size: 18px;
+    font-weight: 900;
+    color: var(--text-primary, #f1f5f9);
+    margin: 0;
+    letter-spacing: -0.3px;
+}
+
+.pfp-section-sub {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted, #64748b);
+}
+
+.pfp-section-empty,
+.pfp-chart-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 56px 0;
+    color: var(--text-muted, #64748b);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.pfp-section-empty span,
+.pfp-chart-empty span {
+    font-size: 42px;
+}
+
+/* ── Charts ── */
+.pfp-charts-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.pfp-charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+}
+
+.pfp-chart-card {
+    background: var(--bg-surface, rgba(255, 255, 255, 0.03));
+    border: 1px solid var(--border, rgba(255, 255, 255, 0.07));
+    border-radius: 18px;
+    padding: 18px;
+}
+
+.pfp-chart-title {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--text-secondary, #94a3b8);
+    margin: 0 0 14px;
+    letter-spacing: 0.2px;
+}
+
+.pfp-tooltip {
+    background: var(--bg-surface, #1e2533);
+    border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
+    border-radius: 10px;
+    padding: 8px 14px;
+    font-family: 'Manrope', sans-serif;
+    font-size: 12px;
+}
+
+.pfp-tooltip-label {
+    color: var(--text-muted, #64748b);
+    font-size: 10px;
+    font-weight: 700;
+    margin: 0 0 4px;
+}
+
+/* ── Posts grid ── */
+.pfp-posts-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.pfp-posts-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3px;
+}
+
+.pfp-post-cell {
+    position: relative;
+    aspect-ratio: 1;
+    background: #000;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    overflow: hidden;
+    border-radius: 4px;
+    transition: transform 0.2s ease;
+}
+
+.pfp-post-cell:hover {
+    transform: scale(0.97);
+}
+
+.pfp-post-thumb {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    pointer-events: none;
+}
+
+.pfp-post-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.55), transparent 50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+    padding: 8px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.pfp-post-cell:hover .pfp-post-overlay {
+    opacity: 1;
+}
+
+.pfp-post-time {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 600;
+}
+
+.pfp-post-ai {
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    background: rgba(0, 229, 160, 0.25);
+    border: 1px solid rgba(0, 229, 160, 0.4);
+    color: #00e5a0;
+    border-radius: 4px;
+    padding: 2px 6px;
+    margin-top: 3px;
+}
+
+/* Lightbox */
+.pfp-lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.88);
+    backdrop-filter: blur(8px);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.pfp-lightbox-card {
+    background: var(--bg-surface, #111827);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 20px;
+    max-width: 540px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.pfp-lightbox-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: rgba(255, 255, 255, 0.08);
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    color: #94a3b8;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pfp-lightbox-video {
+    width: 100%;
+    border-radius: 12px;
+    max-height: 340px;
+    object-fit: cover;
+}
+
+.pfp-lightbox-summary {
+    font-size: 13px;
+    color: var(--text-secondary, #94a3b8);
+    font-style: italic;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.pfp-lightbox-metrics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.pfp-metric-chip {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    padding: 6px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.pfp-mc-key {
+    font-size: 9px;
+    color: #64748b;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.pfp-mc-val {
+    font-size: 15px;
+    color: var(--text-primary, #f1f5f9);
+    font-weight: 900;
+}
+
+.pfp-lightbox-time {
+    font-size: 11px;
+    color: var(--text-muted, #64748b);
+    font-weight: 600;
+    align-self: flex-end;
+}
+
+/* ── AI Analysis timeline ── */
+.pfp-analysis-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.pfp-analysis-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.pfp-analysis-card {
+    display: flex;
+    gap: 14px;
+    background: var(--bg-surface, rgba(255, 255, 255, 0.03));
+    border: 1px solid var(--border, rgba(255, 255, 255, 0.07));
+    border-radius: 16px;
+    padding: 16px 18px;
+    transition: border-color 0.2s ease;
+}
+
+.pfp-analysis-card:hover {
+    border-color: rgba(var(--c-rgb, 0, 229, 160), 0.25);
+}
+
+.pfp-analysis-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+
+.pfp-analysis-num {
+    font-size: 22px;
+    font-weight: 900;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+}
+
+.pfp-analysis-line {
+    flex: 1;
+    width: 1.5px;
+    background: var(--border, rgba(255, 255, 255, 0.07));
+    min-height: 20px;
+}
+
+.pfp-analysis-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.pfp-analysis-header-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.pfp-analysis-sport {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+}
+
+.pfp-analysis-time {
+    font-size: 11px;
+    color: var(--text-muted, #64748b);
+    font-weight: 600;
+    margin-left: auto;
+}
+
+.pfp-analysis-score {
+    font-size: 15px;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.pfp-analysis-summary {
+    font-size: 12px;
+    color: var(--text-secondary, #94a3b8);
+    font-style: italic;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.pfp-analysis-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 8px;
+}
+
+.pfp-am-chip {
+    background: var(--bg-primary, rgba(0, 0, 0, 0.25));
+    border: 1px solid var(--border, rgba(255, 255, 255, 0.06));
+    border-radius: 10px;
+    padding: 8px 11px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.pfp-am-key {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: var(--text-muted, #64748b);
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.pfp-am-val {
+    font-size: 16px;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.pfp-am-bar {
+    height: 3px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.pfp-am-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+    .pfp-hero {
+        flex-direction: column;
+    }
+
+    .pfp-score-panel {
+        flex-direction: row;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .pfp-posts-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .pfp-charts-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .pfp-tab-content {
+        padding: 16px 14px 0;
+    }
+
+    .pfp-analysis-metrics {
+        grid-template-columns: 1fr 1fr;
+    }
+}

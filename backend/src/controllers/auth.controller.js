@@ -14,7 +14,7 @@ const generateToken = (id) => {
 exports.register = async (req, res) => {
     try {
         // Explicitly extract ONLY the allowed fields to prevent stat-stuffing
-        const { 
+        const {
             name, email, password, role, location, phoneNumber, age,
             sport, playerRole, subRole, style, bio, height, weight, // Athlete specific
             organization // Recruiter specific
@@ -30,34 +30,39 @@ exports.register = async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        // 3. Create the user in the database with ONLY the sanitized fields
-        const user = await User.create({
+        // Build user object — only add fields that are actually provided
+        // (recruiters have no sport/age/playerRole etc.)
+        const userData = {
             name,
             email,
-            password: hashedPassword, 
+            password: hashedPassword,
             role,
             location,
             phoneNumber,
-            sport,
-            playerRole,
-            subRole,
-            style,
-            bio,
-            height,
-            weight,
-            organization,
-            age
-        });
+        };
+        if (age) userData.age = Number(age);
+        if (sport) userData.sport = sport;
+        if (playerRole) userData.playerRole = playerRole;
+        if (subRole) userData.subRole = subRole;
+        if (style) userData.style = style;
+        if (bio) userData.bio = bio;
+        if (height) userData.height = height;
+        if (weight) userData.weight = weight;
+        if (organization) userData.organization = organization;
+
+        // 3. Create the user in the database
+        const user = await User.create(userData);
+
 
         // 4. Return success response with cookie
         if (user) {
             const token = generateToken(user._id);
 
             res.cookie('token', token, {
-                httpOnly: true, 
-                secure: process.env.NODE_ENV === 'production', 
-                sameSite: 'strict', 
-                maxAge: 30 * 24 * 60 * 60 * 1000 
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'lax',
+                maxAge: 30 * 24 * 60 * 60 * 1000
             });
 
             res.status(201).json({
@@ -67,7 +72,16 @@ exports.register = async (req, res) => {
                 role: user.role,
                 sport: user.sport,
                 playerRole: user.playerRole,
-                token 
+                subRole: user.subRole,
+                style: user.style,
+                bio: user.bio,
+                location: user.location,
+                phoneNumber: user.phoneNumber,
+                age: user.age,
+                height: user.height,
+                weight: user.weight,
+                scoutScore: user.scoutScore,
+                token
             });
         } else {
             res.status(400).json({ message: 'Invalid user data received' });
@@ -88,16 +102,16 @@ exports.login = async (req, res) => {
 
         // 2. Check if user exists AND if the password matches using bcrypt
         if (user && (await bcrypt.compare(password, user.password))) {
-            
+
             // Generate token ONCE
             const token = generateToken(user._id);
 
             // Set the token in an HTTP-only cookie
             res.cookie('token', token, {
-                httpOnly: true, 
-                secure: process.env.NODE_ENV === 'production', 
-                sameSite: 'strict', 
-                maxAge: 30 * 24 * 60 * 60 * 1000 
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'lax',
+                maxAge: 30 * 24 * 60 * 60 * 1000
             });
 
             res.json({
@@ -105,7 +119,18 @@ exports.login = async (req, res) => {
                 name: user.name,
                 email: user.email,
                 role: user.role,
-                token 
+                sport: user.sport,
+                playerRole: user.playerRole,
+                subRole: user.subRole,
+                style: user.style,
+                bio: user.bio,
+                location: user.location,
+                phoneNumber: user.phoneNumber,
+                age: user.age,
+                height: user.height,
+                weight: user.weight,
+                scoutScore: user.scoutScore,
+                token
             });
         } else {
             res.status(401).json({ message: 'Invalid email or password' });
@@ -114,4 +139,16 @@ exports.login = async (req, res) => {
         console.error(error);
         res.status(500).json({ message: 'Server error during login' });
     }
+};
+
+// @desc    Clear the auth cookie and log user out
+// @route   POST /api/auth/logout
+exports.logout = (req, res) => {
+    res.cookie('token', '', {
+        httpOnly: true,
+        expires: new Date(0), // Immediately expire the cookie
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+    });
+    res.status(200).json({ message: 'Logged out successfully' });
 };

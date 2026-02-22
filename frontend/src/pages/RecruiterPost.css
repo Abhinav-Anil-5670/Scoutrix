@@ -1,0 +1,193 @@
+/* ============================================================
+   RECRUITER POST — Announcement Form
+   ============================================================ */
+.rp-page {
+    font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    padding: 24px 20px;
+    max-width: 600px;
+    margin: 0 auto;
+    color: var(--text-primary, #f1f5f9);
+}
+
+.rp-header {
+    text-align: center;
+    margin-bottom: 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.rp-icon {
+    font-size: 32px;
+    background: rgba(244, 114, 182, 0.1);
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid rgba(244, 114, 182, 0.25);
+}
+
+.rp-title {
+    font-size: 24px;
+    font-weight: 900;
+    margin: 0;
+    letter-spacing: -0.5px;
+}
+
+.rp-subtitle {
+    font-size: 13px;
+    color: var(--text-muted, #64748b);
+    line-height: 1.5;
+    margin: 0;
+    max-width: 320px;
+}
+
+.rp-form {
+    background: var(--bg-surface, rgba(255, 255, 255, 0.03));
+    border: 1px solid var(--border, rgba(255, 255, 255, 0.08));
+    border-radius: 20px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.rp-alert {
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.rp-alert.success {
+    background: rgba(0, 229, 160, 0.15);
+    color: #00e5a0;
+    border: 1px solid rgba(0, 229, 160, 0.3);
+}
+
+.rp-alert.error {
+    background: rgba(248, 113, 113, 0.15);
+    color: #f87171;
+    border: 1px solid rgba(248, 113, 113, 0.3);
+}
+
+.rp-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.rp-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.rp-group label {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: var(--text-secondary, #94a3b8);
+    letter-spacing: 0.5px;
+}
+
+.rp-group input,
+.rp-group select,
+.rp-group textarea {
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 12px 14px;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border, rgba(255, 255, 255, 0.12));
+    border-radius: 12px;
+    color: var(--text-primary, #f1f5f9);
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.rp-group input:focus,
+.rp-group select:focus,
+.rp-group textarea:focus {
+    border-color: #f472b6;
+}
+
+.rp-group textarea {
+    resize: vertical;
+    line-height: 1.5;
+}
+
+.rp-submit-btn {
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 800;
+    padding: 14px;
+    border-radius: 14px;
+    background: #f472b6;
+    color: #111827;
+    border: none;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: transform 0.15s ease, opacity 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rp-submit-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(244, 114, 182, 0.3);
+}
+
+.rp-submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.rp-spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    border-top-color: #111827;
+    border-radius: 50%;
+    animation: rp-spin 0.6s linear infinite;
+}
+
+@keyframes rp-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Light theme overrides */
+[data-theme='light'] .rp-page {
+    color: #0f172a;
+}
+
+[data-theme='light'] .rp-form {
+    background: #fff;
+    border-color: rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+}
+
+[data-theme='light'] .rp-group input,
+[data-theme='light'] .rp-group select,
+[data-theme='light'] .rp-group textarea {
+    background: #f8fafc;
+    border-color: rgba(0, 0, 0, 0.15);
+    color: #0f172a;
+}
+
+[data-theme='light'] .rp-submit-btn {
+    color: #fff;
+}
+
+@media (max-width: 480px) {
+    .rp-row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+}

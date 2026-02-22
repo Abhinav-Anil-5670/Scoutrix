@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './AuthModal.css';
 
 const SPORTS_TAXONOMY = {
@@ -42,9 +43,12 @@ const SPORTS_TAXONOMY = {
     }
 };
 
-const AuthModal = ({ isOpen, onClose }) => {
+const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
     const [isLogin, setIsLogin] = useState(true);
     const [role, setRole] = useState('athlete'); // 'athlete' or 'recruiter'
+    const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const navigate = useNavigate();
 
     // Form State
     const [formData, setFormData] = useState({
@@ -74,6 +78,7 @@ const AuthModal = ({ isOpen, onClose }) => {
     const togglePanel = () => {
         setIsLogin(!isLogin);
         if (isLogin) setRole('athlete');
+        setError('');
     };
 
     const handleInputChange = (e) => {
@@ -93,10 +98,49 @@ const AuthModal = ({ isOpen, onClose }) => {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(`Submitting ${isLogin ? 'Login' : 'Signup'} for role: ${!isLogin ? role : 'user'}`, formData);
-        // TODO: API
+        setError('');
+        setIsLoading(true);
+
+        try {
+            const url = isLogin
+                ? 'http://localhost:3000/api/auth/login'
+                : 'http://localhost:3000/api/auth/register';
+
+            const payload = isLogin
+                ? { email: formData.email, password: formData.password }
+                : { ...formData, role: role };
+
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include', // ← required to send/receive httpOnly cookies cross-origin
+                body: JSON.stringify(payload)
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                const action = isLogin ? 'Login failed' : 'Signup failed';
+                throw new Error(`${action}: ${data.message || 'Something went wrong'}`);
+            }
+
+            if (isLogin) {
+                // Navigate first, then update global state
+                navigate(`/dashboard/${data.role}`);
+                if (onLoginSuccess) onLoginSuccess(data);
+            } else {
+                // Signup successful — switch to login tab
+                setIsLogin(true);
+                setFormData(prev => ({ ...prev, password: '' }));
+                alert('Account created successfully! Please log in.');
+            }
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const availableSports = Object.keys(SPORTS_TAXONOMY);
@@ -141,6 +185,7 @@ const AuthModal = ({ isOpen, onClose }) => {
 
                         <div className="form-scroll-area">
                             <span className="form-subtitle">Use your email for registration</span>
+                            {error && <div className="auth-error-message">{error}</div>}
 
                             {/* Common Signup Fields */}
                             <input type="text" name="name" placeholder="Full Name" value={formData.name} onChange={handleInputChange} required />
@@ -189,7 +234,9 @@ const AuthModal = ({ isOpen, onClose }) => {
                                 </div>
                             )}
                         </div>
-                        <button type="submit" className="btn-auth-submit mt-3">Sign Up</button>
+                        <button type="submit" className="btn-auth-submit mt-3" disabled={isLoading}>
+                            {isLoading ? 'Signing Up...' : 'Sign Up'}
+                        </button>
                     </form>
                 </div>
 
@@ -198,12 +245,15 @@ const AuthModal = ({ isOpen, onClose }) => {
                     <form className="auth-form light-theme-form" onSubmit={handleSubmit}>
                         <h1 className="form-title">Welcome Back</h1>
                         <span className="form-subtitle">Enter your credentials to access your dashboard</span>
+                        {error && <div className="auth-error-message">{error}</div>}
 
                         <input type="email" name="email" placeholder="Email Address" value={formData.email} onChange={handleInputChange} required />
                         <input type="password" name="password" placeholder="Password" value={formData.password} onChange={handleInputChange} required />
 
                         <a href="#" className="forgot-password">Forgot your password?</a>
-                        <button type="submit" className="btn-auth-submit">Log In</button>
+                        <button type="submit" className="btn-auth-submit" disabled={isLoading}>
+                            {isLoading ? 'Logging In...' : 'Log In'}
+                        </button>
                     </form>
                 </div>
 

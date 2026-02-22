@@ -1,0 +1,270 @@
+/* ============================================================
+   SPORT MOTION ANALYZER — theme-aware, Manrope font
+   ============================================================ */
+
+.sma-wrap {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    font-family: 'Manrope', sans-serif;
+}
+
+/* ── Header ── */
+.sma-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.sma-badge {
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: var(--c, #00e5a0);
+    opacity: 0.75;
+}
+
+.sma-phase-pill {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    border: 1px solid;
+    border-radius: 20px;
+    padding: 4px 14px;
+    transition: color 0.3s ease;
+}
+
+/* ── Side-by-side panels ── */
+.sma-panels {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    width: 100%;
+}
+
+.sma-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: var(--bg-surface, rgba(255, 255, 255, 0.03));
+    border: 1px solid rgba(var(--c-rgb, 0, 229, 160), 0.14);
+    border-radius: 18px;
+    padding: 14px 12px 10px;
+    overflow: hidden;
+}
+
+.sma-panel-label {
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: var(--c, #00e5a0);
+    opacity: 0.65;
+    text-align: center;
+}
+
+.sma-canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 340px;
+    border-radius: 10px;
+    background: var(--bg-primary, #060810);
+}
+
+.sma-video-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #000;
+}
+
+.sma-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.sma-no-video {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: var(--text-muted, #64748b);
+    font-size: 13px;
+}
+
+.sma-no-video span {
+    font-size: 36px;
+}
+
+.sma-video-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 10px;
+    font-weight: 700;
+    border: 1px solid;
+    border-radius: 6px;
+    padding: 3px 10px;
+    backdrop-filter: blur(8px);
+}
+
+.sma-panel-footer {
+    font-size: 10px;
+    font-weight: 700;
+    text-align: center;
+    opacity: 0.7;
+}
+
+/* ── Overall accuracy bar ── */
+.sma-accuracy-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    background: var(--bg-surface, rgba(255, 255, 255, 0.03));
+    border: 1px solid rgba(var(--c-rgb, 0, 229, 160), 0.15);
+    border-radius: 16px;
+    padding: 16px 22px;
+}
+
+.sma-accuracy-left {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.sma-accuracy-label {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--text-primary, #f1f5f9);
+}
+
+.sma-accuracy-desc {
+    font-size: 12px;
+    color: var(--text-muted, #64748b);
+}
+
+.sma-accuracy-ring {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.sma-ring-center {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 900;
+}
+
+/* ── Joint breakdown ── */
+.sma-joints-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.sma-joints-title {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--text-primary, #f1f5f9);
+    margin: 0;
+    letter-spacing: -0.2px;
+}
+
+.sma-joints-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+}
+
+.sma-joint-card {
+    background: var(--bg-surface, rgba(255, 255, 255, 0.03));
+    border: 1px solid var(--border, rgba(255, 255, 255, 0.07));
+    border-radius: 12px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: border-color 0.2s ease;
+}
+
+.sma-joint-card:hover {
+    border-color: rgba(255, 255, 255, 0.14);
+}
+
+.sma-joint-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 6px;
+}
+
+.sma-joint-name {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary, #94a3b8);
+}
+
+.sma-joint-score {
+    font-size: 15px;
+    font-weight: 900;
+    line-height: 1;
+    transition: color 0.4s ease;
+}
+
+.sma-joint-bar-track {
+    height: 4px;
+    background: var(--border, rgba(255, 255, 255, 0.07));
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.sma-joint-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+}
+
+.sma-joint-verdict {
+    font-size: 10px;
+    color: var(--text-muted, #64748b);
+}
+
+/* ── Legend ── */
+.sma-legend {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+    font-size: 11px;
+    font-weight: 600;
+    justify-content: center;
+    opacity: 0.75;
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+    .sma-panels {
+        grid-template-columns: 1fr;
+    }
+
+    .sma-joints-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .sma-accuracy-bar {
+        flex-direction: row;
+        padding: 14px 16px;
+    }
+}
