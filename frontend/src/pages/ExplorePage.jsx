@@ -257,7 +257,7 @@ const OpportunityCard = ({ opp }) => {
     const handleApply = async () => {
         setApplying(true);
         try {
-            const r = await fetch(`http://localhost:3000/api/opportunities/${opp._id}/apply`, {
+            const r = await fetch(`${import.meta.env.VITE_API_URL}/api/opportunities/${opp._id}/apply`, {
                 method: 'POST', credentials: 'include'
             });
             if (r.ok) setApplied(true);
@@ -333,9 +333,9 @@ const ExplorePage = () => {
         const fetchFeed = async () => {
             try {
                 // Fetch videos
-                const resVids = await fetch('http://localhost:3000/api/videos/feed', { credentials: 'include' });
+                const resVids = await fetch(`${import.meta.env.VITE_API_URL}/api/videos/feed`, { credentials: 'include' });
                 // Fetch opportunities
-                const resOpps = await fetch('http://localhost:3000/api/opportunities', { credentials: 'include' });
+                const resOpps = await fetch(`${import.meta.env.VITE_API_URL}/api/opportunities`, { credentials: 'include' });
 
                 if (resVids.status === 401 || resOpps.status === 401) throw new Error('__auth__');
                 if (!resVids.ok || !resOpps.ok) throw new Error(`Server error — please try again.`);

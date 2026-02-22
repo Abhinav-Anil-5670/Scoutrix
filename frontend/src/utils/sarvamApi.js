@@ -1,6 +1,6 @@
 // All translation calls go through our backend proxy to avoid CORS issues.
 // The backend relays the request to https://api.sarvam.ai/translate with the API key.
-const PROXY_URL = 'http://localhost:3000/api/translate';
+const PROXY_URL = `${import.meta.env.VITE_API_URL}/api/translate`;
 
 /**
  * Translate text via our backend proxy (which calls Sarvam AI)

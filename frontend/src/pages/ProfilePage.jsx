@@ -7,7 +7,7 @@ import {
 import Icons from '../components/Icons';
 import './ProfilePage.css';
 
-const API = 'http://localhost:3000/api';
+const API = `${import.meta.env.VITE_API_URL}/api`;
 
 /* ── helpers ─────────────────────────────────────────────────── */
 const timeAgo = (d) => {

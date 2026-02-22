@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Leaderboard.css';
 
-const API = 'http://localhost:3000/api';
+const API = `${import.meta.env.VITE_API_URL}/api`;
 
 const getSportColor = s => ({ Cricket: '#00e5a0', Badminton: '#a78bfa', Football: '#fbbf24' }[s] || '#38bdf8');
 

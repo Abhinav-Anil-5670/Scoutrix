@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './RecruiterPost.css';
 
-const API = 'http://localhost:3000/api';
+const API = `${import.meta.env.VITE_API_URL}/api`;
 
 const SPORTS = ['Cricket', 'Football', 'Badminton'];
 const ROLES = {

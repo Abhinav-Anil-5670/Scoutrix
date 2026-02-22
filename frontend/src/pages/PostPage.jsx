@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Icons from '../components/Icons';
 import './PostPage.css';
 
-const API = 'http://localhost:3000/api';
+const API = `${import.meta.env.VITE_API_URL}/api`;
 
 /* ── time-ago helper ─────────────────────────────────────────────── */
 const timeAgo = (dateStr) => {
