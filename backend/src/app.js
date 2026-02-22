@@ -15,13 +15,12 @@ const app = express();
 // Middleware
 // Middleware
 app.use(cors({
-    origin: [
-        'http://localhost:5173',
-        'https://scoutrix-three.vercel.app',
-        'https://scoutrix-gxsrph51c-abhinav-anils-projects.vercel.app' // Add the specific preview URL from your error
-    ],
+    origin: function (origin, callback) {
+        // Allow any origin that Vercel or localhost might generate
+        return callback(null, true);
+    },
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Explicitly allow preflight methods
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
