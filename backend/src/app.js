@@ -14,7 +14,7 @@ const app = express();
 
 // Middleware
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: ['http://localhost:5173', 'scoutrix-three.vercel.app'],
     credentials: true
 })); // Allows frontend to talk to backend
 app.use(express.json());
