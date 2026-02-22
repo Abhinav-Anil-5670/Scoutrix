@@ -43,7 +43,7 @@ const SPORTS_TAXONOMY = {
     }
 };
 
-const AuthModal = ({ isOpen, onClose }) => {
+const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
     const [isLogin, setIsLogin] = useState(true);
     const [role, setRole] = useState('athlete'); // 'athlete' or 'recruiter'
     const [error, setError] = useState('');
@@ -108,7 +108,6 @@ const AuthModal = ({ isOpen, onClose }) => {
                 ? 'http://localhost:3000/api/auth/login'
                 : 'http://localhost:3000/api/auth/register';
 
-            // Clean up payload based on role, avoiding undefined values sending if possible, but keep simple
             const payload = isLogin
                 ? { email: formData.email, password: formData.password }
                 : { ...formData, role: role };
@@ -116,6 +115,7 @@ const AuthModal = ({ isOpen, onClose }) => {
             const response = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+                credentials: 'include', // ← required to send/receive httpOnly cookies cross-origin
                 body: JSON.stringify(payload)
             });
 
@@ -127,13 +127,13 @@ const AuthModal = ({ isOpen, onClose }) => {
             }
 
             if (isLogin) {
-                // Login successful
-                onClose();
+                // Navigate first, then update global state
                 navigate(`/dashboard/${data.role}`);
+                if (onLoginSuccess) onLoginSuccess(data);
             } else {
-                // Signup successful
+                // Signup successful — switch to login tab
                 setIsLogin(true);
-                setFormData(prev => ({ ...prev, password: '' })); // Clear password for security
+                setFormData(prev => ({ ...prev, password: '' }));
                 alert('Account created successfully! Please log in.');
             }
         } catch (err) {
