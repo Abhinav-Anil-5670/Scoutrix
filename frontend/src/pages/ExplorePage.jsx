@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import Icons from '../components/Icons';
 import './ExplorePage.css';
 
 // ─────────────────────────────────────────────
@@ -55,18 +56,18 @@ const generateNarrative = (post) => {
 
     const narratives = [
         meta && meta >= 700
-            ? `⚡ Elite performer — MetaScore ${meta} puts them in the top tier of ${sport || 'their sport'}.`
+            ? <><Icons.Zap /> Elite performer — MetaScore {meta} puts them in the top tier of {sport || 'their sport'}.</>
             : null,
         topVal >= 8.5
-            ? `🔥 Exceptional ${topLabel} of ${topVal}/10 — a standout metric in this clip.`
+            ? <><Icons.Flame /> Exceptional {topLabel} of {topVal}/10 — a standout metric in this clip.</>
             : null,
         role
-            ? `📊 Scouted as a ${role} — AI confirms strong positional awareness and technique.`
+            ? <><Icons.BarChart /> Scouted as a {role} — AI confirms strong positional awareness and technique.</>
             : null,
         post.scoutSummary
-            ? `🎯 "${post.scoutSummary}"`
+            ? <><Icons.Target /> "{post.scoutSummary}"</>
             : null,
-        `💡 AI analysis complete — ${numericKeys.length} performance metrics extracted from this session.`,
+        <><Icons.Lightbulb /> AI analysis complete — {numericKeys.length} performance metrics extracted from this session.</>,
     ].filter(Boolean);
 
     return narratives[0] || narratives[narratives.length - 1];
@@ -84,7 +85,7 @@ const MetricBar = ({ label, value }) => {
             <div className="metric-bar-track">
                 <div
                     className="metric-bar-fill"
-                    style={{ width: `${pct}%`, background: barColor }}
+                    style={{ width: `${pct}% `, background: barColor }}
                 />
             </div>
             <div className="metric-value" style={{ color: barColor }}>{value}/10</div>
@@ -115,16 +116,16 @@ const ExploreCard = ({ post, showPlayerDetails, showRecruiterDetails }) => {
             {/* ── Top row: name + sport badge + time ── */}
             <div className="card-header">
                 <div className="card-identity">
-                    <div className="athlete-avatar" style={{ background: `${sportColor}22`, color: sportColor }}>
+                    <div className="athlete-avatar" style={{ background: `${sportColor} 22`, color: sportColor }}>
                         {a.name?.charAt(0).toUpperCase()}
                     </div>
                     <div className="athlete-meta">
                         <span className="athlete-name">{a.name}</span>
-                        <span className="athlete-location">📍 {a.location || 'India'}</span>
+                        <span className="athlete-location"><Icons.MapPin /> {a.location || 'India'}</span>
                     </div>
                 </div>
                 <div className="card-right">
-                    <span className="sport-badge" style={{ background: `${sportColor}18`, color: sportColor, borderColor: `${sportColor}40` }}>
+                    <span className="sport-badge" style={{ background: `${sportColor} 18`, color: sportColor, borderColor: `${sportColor} 40` }}>
                         {a.sport}
                     </span>
                     <span className="card-time">{timeAgo(post.createdAt)}</span>
@@ -182,7 +183,7 @@ const ExploreCard = ({ post, showPlayerDetails, showRecruiterDetails }) => {
                                 ? <><polyline points="18 15 12 9 6 15" /></>
                                 : <><polyline points="6 9 12 15 18 9" /></>}
                         </svg>
-                        {expanded ? 'Hide AI Metrics' : `View AI Metrics (${numericMetrics.length})`}
+                        {expanded ? 'Hide AI Metrics' : `View AI Metrics(${numericMetrics.length})`}
                     </button>
 
                     {expanded && (
@@ -230,16 +231,16 @@ const LiveSummaryBar = ({ posts }) => {
     return (
         <div className="live-summary-bar">
             <span className="live-summary-item">
-                📡 <strong>{posts.length}</strong> performances in the feed
+                <Icons.Radio /> <strong>{posts.length}</strong> performances in the feed
             </span>
             {topSport && (
                 <span className="live-summary-item">
-                    🏆 <strong>{topSport[1]}</strong> uploads in <strong>{topSport[0]}</strong>
+                    <Icons.Trophy /> <strong>{topSport[1]}</strong> uploads in <strong>{topSport[0]}</strong>
                 </span>
             )}
             {maxScore && (
                 <span className="live-summary-item">
-                    ⚡ Top MetaScore: <strong style={{ color: '#00e5a0' }}>{maxScore}</strong>
+                    <Icons.Zap /> Top MetaScore: <strong style={{ color: '#00e5a0' }}>{maxScore}</strong>
                 </span>
             )}
         </div>
@@ -270,7 +271,7 @@ const OpportunityCard = ({ opp }) => {
         <article className="explore-card opp-card" style={{ borderLeft: '4px solid #f472b6' }}>
             <div className="card-header">
                 <div className="card-identity">
-                    <div className="athlete-avatar opp-avatar" style={{ background: 'rgba(244,114,182,0.1)', color: '#f472b6' }}>📢</div>
+                    <div className="athlete-avatar opp-avatar" style={{ background: 'rgba(244,114,182,0.1)', color: '#f472b6' }}><Icons.Megaphone /></div>
                     <div className="athlete-meta">
                         <span className="athlete-name" style={{ color: '#f472b6' }}>
                             {opp.recruiterId?.name || 'Recruiter'}
@@ -289,7 +290,7 @@ const OpportunityCard = ({ opp }) => {
                 <div style={{ display: 'flex', gap: '8px', marginBottom: '14px' }}>
                     <span className="role-tag" style={{ color: '#00e5a0', borderColor: 'rgba(0,229,160,0.3)' }}>{opp.sport}</span>
                     <span className="role-tag" style={{ color: '#38bdf8', borderColor: 'rgba(56,189,248,0.3)' }}>{opp.role}</span>
-                    <span className="role-tag muted" style={{ border: 'none', background: 'transparent', padding: 0 }}>🗓️ {opp.date}</span>
+                    <span className="role-tag muted" style={{ border: 'none', background: 'transparent', padding: 0, display: 'flex', alignItems: 'center' }}><Icons.Calendar /> {opp.date}</span>
                 </div>
                 <p className="card-narrative" style={{ borderLeftColor: '#f472b6', fontSize: '13px' }}>
                     {opp.description}
@@ -308,7 +309,7 @@ const OpportunityCard = ({ opp }) => {
                         fontSize: '13px', width: '100%', transition: 'all 0.2s ease'
                     }}
                 >
-                    {applied ? '✓ Trial Request Sent' : 'Raise Hand (Apply for Trial)'}
+                    {applied ? <><Icons.Check /> Trial Request Sent</> : 'Raise Hand (Apply for Trial)'}
                 </button>
             </div>
         </article>
@@ -440,19 +441,19 @@ const ExplorePage = () => {
                 )}
                 {error && error === '__auth__' && (
                     <div className="feed-state">
-                        <span className="empty-icon">🔐</span>
+                        <span className="empty-icon"><Icons.Lock /></span>
                         <p style={{ color: '#94a3b8' }}>Please log in to view the live feed.</p>
                     </div>
                 )}
                 {error && error !== '__auth__' && (
                     <div className="feed-state feed-error">
-                        <span>⚠️</span>
+                        <span><Icons.AlertTriangle /></span>
                         <p>{error}</p>
                     </div>
                 )}
                 {!loading && !error && filteredPosts.length === 0 && (
                     <div className="feed-state">
-                        <span className="empty-icon">🏟️</span>
+                        <span className="empty-icon"><Icons.Stadium /></span>
                         <p>No discoveries yet — be the first to upload!</p>
                     </div>
                 )}

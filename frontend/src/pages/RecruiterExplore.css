@@ -637,40 +637,35 @@
     background: rgba(56, 189, 248, 0.18);
 }
 
-/* ── Light theme ────────────────────────────────────────── */
-[data-theme='light'] .re-page {
-    color: #0f172a;
-}
+/* ── Light theme support via global vars ────────────────────────────────────────── */
+/* 
+    The components now pull heavily from --bg-color, --card-bg, --text-main, 
+    and --text-muted defined in index.css. 
+    Specific elements like inputs or active toggles adapt naturally based on these.
+*/
 
-[data-theme='light'] .re-header {
-    background: #fff;
-    border-color: rgba(0, 0, 0, 0.08);
+[data-theme='light'] .re-page {
+    --text-primary: var(--text-main, #0f172a);
+    --text-secondary: #334155;
+    --border: rgba(0, 0, 0, 0.08);
 }
 
 [data-theme='light'] .re-search {
-    background: #f1f5f9;
+    background: var(--card-bg);
     border-color: rgba(0, 0, 0, 0.1);
-    color: #0f172a;
 }
 
-[data-theme='light'] .re-filters {
-    border-color: rgba(0, 0, 0, 0.07);
-}
-
+[data-theme='light'] .re-header,
+[data-theme='light'] .re-live-bar,
+[data-theme='light'] .re-filters,
 [data-theme='light'] .re-card {
-    background: #fff;
+    background: var(--card-bg);
     border-color: rgba(0, 0, 0, 0.08);
 }
 
-[data-theme='light'] .re-stat-card {
-    background: #f8fafc;
-    border-color: rgba(0, 0, 0, 0.06);
-}
-
 [data-theme='light'] .re-region-select {
-    background: #f1f5f9;
+    background: var(--bg-color);
     border-color: rgba(0, 0, 0, 0.12);
-    color: #0f172a;
 }
 
 [data-theme='light'] .re-pill-toggle {
@@ -680,7 +675,6 @@
 [data-theme='light'] .re-save-btn {
     background: rgba(0, 0, 0, 0.04);
     border-color: rgba(0, 0, 0, 0.12);
-    color: #64748b;
 }
 
 /* Responsive */

@@ -62,7 +62,9 @@ const RecruiterPost = ({ user }) => {
     return (
         <div className="rp-page">
             <div className="rp-header">
-                <span className="rp-icon">📢</span>
+                <span className="rp-icon">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+                </span>
                 <h1 className="rp-title">Post an Opportunity</h1>
                 <p className="rp-subtitle">Announce trials, club openings, or events. Scout top talent directly.</p>
             </div>

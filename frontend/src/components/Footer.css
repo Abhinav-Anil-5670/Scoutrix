@@ -107,3 +107,16 @@
         text-align: center;
     }
 }
+
+/* Dashboard sidebar adjustment */
+@media (min-width: 768px) {
+    .footer-dashboard-adjusted {
+        padding-left: calc(72px + 3rem);
+    }
+}
+
+@media (min-width: 1024px) {
+    .footer-dashboard-adjusted {
+        padding-left: calc(180px + 3rem);
+    }
+}

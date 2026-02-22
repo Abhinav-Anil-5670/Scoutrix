@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
+import Icons from '../components/Icons';
 import './PostPage.css';
 
 const API = 'http://localhost:3000/api';
@@ -184,13 +185,13 @@ const Composer = ({ onPosted }) => {
 
                 <div className="pp-mode-cards">
                     <button className="pp-mode-card" onClick={() => { setMode('upload'); }}>
-                        <span className="pp-mode-icon">📁</span>
+                        <span className="pp-mode-icon"><Icons.Folder /></span>
                         <span className="pp-mode-label">Upload Video</span>
                         <span className="pp-mode-desc">Choose a pre-recorded match or training clip from your device</span>
                         <div className="pp-mode-glow" style={{ '--mc': '#00e5a0' }} />
                     </button>
                     <button className="pp-mode-card" onClick={() => { setMode('live'); startCamera(); }}>
-                        <span className="pp-mode-icon">🎥</span>
+                        <span className="pp-mode-icon"><Icons.Video /></span>
                         <span className="pp-mode-label">Record Live</span>
                         <span className="pp-mode-desc">Capture directly from your camera right now</span>
                         <div className="pp-mode-glow" style={{ '--mc': '#f43f5e' }} />
@@ -211,7 +212,7 @@ const Composer = ({ onPosted }) => {
                     className="pp-drop-zone"
                     onClick={() => fileInputRef.current?.click()}
                 >
-                    <span className="pp-drop-icon">🎬</span>
+                    <span className="pp-drop-icon"><Icons.Video /></span>
                     <p className="pp-drop-primary">Drag & drop or click to browse</p>
                     <p className="pp-drop-secondary">MP4 · MOV · AVI · WebM</p>
                     <button className="pp-browse-btn">Choose File</button>
@@ -262,8 +263,8 @@ const Composer = ({ onPosted }) => {
     return (
         <div className="pp-composer">
             <div className="pp-composer-header">
-                <h2 className="pp-title">
-                    {mode === 'live' ? '✅ Clip Ready' : '✅ Video Selected'}
+                <h2 className="pp-title" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    {mode === 'live' ? <><Icons.CheckCircle /> Clip Ready</> : <><Icons.CheckCircle /> Video Selected</>}
                 </h2>
                 <p className="pp-subtitle">Add a caption and post it to your feed.</p>
             </div>
@@ -296,7 +297,7 @@ const Composer = ({ onPosted }) => {
                     onClick={handleSubmit}
                     disabled={submitting}
                 >
-                    {submitting ? 'Posting…' : '🚀 Post'}
+                    {submitting ? 'Posting…' : <><Icons.Rocket /> Post</>}
                 </button>
             </div>
         </div>
@@ -360,7 +361,7 @@ const PostGrid = ({ posts, onNewPost, user }) => {
 
             {posts.length === 0 ? (
                 <div className="pp-empty">
-                    <span className="pp-empty-icon">🎬</span>
+                    <span className="pp-empty-icon" style={{ color: '#94a3b8' }}><Icons.Clapperboard /></span>
                     <p>No posts yet. Share your first performance!</p>
                     <button className="pp-submit-btn" onClick={onNewPost}>
                         + Create First Post

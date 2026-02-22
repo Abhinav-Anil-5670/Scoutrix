@@ -25,13 +25,15 @@ const RecruiterApplicants = () => {
         fetchOpps();
     }, []);
 
-    if (loading) return <div className="ra-state"><div className="ra-spinner" /> Loading applicants...</div>;
-    if (error) return <div className="ra-state ra-error">{error}</div>;
+    if (loading) return <div className="ra-page"><div className="ra-state"><div className="ra-spinner" /> Loading applicants...</div></div>;
+    if (error) return <div className="ra-page"><div className="ra-state ra-error">{error}</div></div>;
 
     return (
         <div className="ra-page">
             <div className="ra-header">
-                <span className="ra-icon">🤖</span>
+                <span className="ra-icon">
+                    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="10" rx="2" /><circle cx="12" cy="5" r="2" /><path d="M12 7v4" /><line x1="8" y1="16" x2="8" y2="16" /><line x1="16" y1="16" x2="16" y2="16" /></svg>
+                </span>
                 <h1 className="ra-title">Automated Recruitment</h1>
                 <p className="ra-subtitle">Track applications for your posted trials and opportunities.</p>
             </div>
@@ -49,8 +51,14 @@ const RecruiterApplicants = () => {
                                     <h3 className="ra-card-title">{opp.title}</h3>
                                     <div className="ra-card-meta">
                                         <span className="ra-badge">{opp.sport} • {opp.role}</span>
-                                        <span className="ra-date">📅 {opp.date}</span>
-                                        <span className="ra-loc">📍 {opp.location}</span>
+                                        <span className="ra-date">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transform: 'translateY(2px)', marginRight: '4px' }}><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
+                                            {opp.date}
+                                        </span>
+                                        <span className="ra-loc">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transform: 'translateY(1.5px)', marginRight: '4px' }}><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>
+                                            {opp.location}
+                                        </span>
                                     </div>
                                 </div>
                                 <div className="ra-count">

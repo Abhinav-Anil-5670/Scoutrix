@@ -21,17 +21,17 @@
     background: rgba(10, 15, 30, 0.3);
 }
 
-/* Light theme — full white navbar */
+/* Light theme — dark navbar */
 [data-theme="light"] .navbar-container {
-    background: rgba(206, 200, 200, 0.836);
+    background: rgba(15, 23, 42, 0.85);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-    box-shadow: 0 1px 20px rgba(0, 0, 0, 0.06);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
 [data-theme="light"] .navbar-container:hover {
-    background: rgba(255, 255, 255, 1);
+    background: rgba(10, 15, 30, 0.95);
 }
 
 .navbar-logo .logo-text {
@@ -46,9 +46,7 @@
     transition: color 0.3s ease;
 }
 
-[data-theme="light"] .navbar-logo .logo-text {
-    color: #0f172a;
-}
+
 
 /* Matching the pinkish-red from the reference screenshot for the logo dot */
 /* Restored logo dot back to the site's accent cyan color */
@@ -94,14 +92,7 @@
     text-rendering: optimizeLegibility;
 }
 
-[data-theme="light"] .navbar-tab {
-    color: #475569;
-}
 
-[data-theme="light"] .navbar-tab:hover,
-[data-theme="light"] .navbar-tab.active {
-    color: #059669;
-}
 
 /* 2. The Underline (The "Content" in the animation) */
 .navbar-tab span::after {
@@ -115,6 +106,8 @@
     transition: width 0.3s ease;
 }
 
+
+
 /* 3. Hover & Active States */
 .navbar-tab:hover,
 .navbar-tab.active {
@@ -122,6 +115,8 @@
     /* Cyan text */
     opacity: 1;
 }
+
+
 
 /* This makes the line stay visible for the active tab */
 .navbar-tab:hover span::after,
@@ -161,16 +156,7 @@
     transition: all 0.3s ease;
 }
 
-[data-theme="light"] .btn-login-unified {
-    color: #0f172a;
-    border-color: #059669;
-}
 
-[data-theme="light"] .btn-login-unified:hover {
-    background: #059669;
-    color: #fff;
-    box-shadow: 0 0 15px rgba(5, 150, 105, 0.35);
-}
 
 .btn-login-unified:hover {
     background: var(--accent-color);
@@ -239,15 +225,6 @@
     border-color: rgba(0, 229, 255, 0.35);
 }
 
-[data-theme="light"] .user-avatar-btn {
-    background: rgba(0, 0, 0, 0.05);
-    border-color: rgba(0, 0, 0, 0.12);
-}
-
-[data-theme="light"] .user-avatar-btn:hover {
-    background: rgba(0, 0, 0, 0.08);
-    border-color: rgba(5, 150, 105, 0.4);
-}
 
 .user-avatar-circle {
     width: 32px;
@@ -278,9 +255,6 @@
     transition: color 0.3s ease;
 }
 
-[data-theme="light"] .user-name-nav {
-    color: #0f172a;
-}
 
 .user-role-nav {
     font-size: 10px;
@@ -291,9 +265,6 @@
     line-height: 1;
 }
 
-[data-theme="light"] .user-role-nav {
-    color: #059669;
-}
 
 .chevron-icon {
     color: #64748b;
@@ -320,11 +291,6 @@
     animation: dropdownIn 0.15s ease;
 }
 
-[data-theme="light"] .user-dropdown {
-    background: #ffffff;
-    border-color: rgba(0, 0, 0, 0.08);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-}
 
 @keyframes dropdownIn {
     from {
@@ -352,9 +318,6 @@
     transition: color 0.3s ease;
 }
 
-[data-theme="light"] .dropdown-name {
-    color: #0f172a;
-}
 
 .dropdown-email {
     font-size: 12px;
@@ -392,6 +355,42 @@
 .logout-item:hover {
     background: rgba(248, 113, 113, 0.1);
     color: #f87171;
+}
+
+/* ── Light theme support for User Menu ── */
+[data-theme="light"] .user-avatar-btn {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .user-avatar-btn:hover {
+    background: rgba(0, 0, 0, 0.08);
+    border-color: rgba(2, 132, 199, 0.35);
+    /* accent color */
+}
+
+[data-theme="light"] .user-name-nav,
+[data-theme="light"] .dropdown-name {
+    color: #0f172a;
+}
+
+[data-theme="light"] .user-dropdown {
+    background: #ffffff;
+    border-color: rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .dropdown-divider {
+    border-top-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .dropdown-item {
+    color: #475569;
+}
+
+[data-theme="light"] .dropdown-item:hover {
+    background: rgba(0, 0, 0, 0.04);
+    color: #0f172a;
 }
 
 .dropdown-backdrop {

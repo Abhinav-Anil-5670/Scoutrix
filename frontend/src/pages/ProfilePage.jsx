@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {
     AreaChart, Area, LineChart, Line, RadarChart, Radar, PolarGrid,
     PolarAngleAxis, XAxis, YAxis, CartesianGrid, Tooltip,
     ResponsiveContainer, PolarRadiusAxis,
 } from 'recharts';
+import Icons from '../components/Icons';
 import './ProfilePage.css';
 
 const API = 'http://localhost:3000/api';
@@ -26,17 +27,19 @@ const sportColor = (sport) => ({
 
 /* ── Compute performance chart data from posts ─────────────────── */
 function buildChartData(posts) {
-    return posts.map((p, i) => {
-        const metrics = p.aiMetrics || {};
+    const aiPosts = posts.filter(p => p.aiMetrics && Object.keys(p.aiMetrics).length > 0);
+    const recentAiPosts = aiPosts.slice(0, 12).reverse();
+    return recentAiPosts.map((p, i) => {
+        const metrics = p.aiMetrics;
         const vals = Object.values(metrics).filter(v => typeof v === 'number');
-        const avg = vals.length ? Math.round(vals.reduce((a, b) => a + b, 0) / vals.length) : 0;
+        const avg = vals.length ? Math.round((vals.reduce((a, b) => a + b, 0) / vals.length) * 10) : 0;
         return {
             name: `#${i + 1}`,
             score: avg,
             date: p.createdAt,
             ...metrics,
         };
-    }).slice(-12); // last 12 posts
+    });
 }
 
 /* ── Build radar data from scout sub-scores ──────────────────── */
@@ -48,19 +51,84 @@ function buildRadarData(scoutScore, sport) {
     const keys = sport === 'Cricket' ? CRICKET_KEYS : sport === 'Football' ? FOOTBALL_KEYS : BADMINTON_KEYS;
     const available = Object.keys(sub).filter(k => keys.includes(k));
     if (!available.length) return [];
-    return available.map(k => ({
-        subject: k.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
-        value: Math.round((sub[k] / 10) * 100), // normalize 0-10 → 0-100
-    }));
+
+    return available.map(k => {
+        let val = sub[k];
+        let normalized = val;
+
+        // Backend calculates subscores natively on a 0-1000 scale. Radar strictly needs 0-100.
+        if (val > 100) {
+            normalized = val / 10;
+        } else if (val <= 10 && val > 0 && !Number.isInteger(val)) {
+            normalized = val * 10; // Fallback mapping for 0-10 scale
+        }
+
+        return {
+            subject: k.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
+            value: Math.min(Math.round(normalized), 100),
+        };
+    });
+}
+
+/* ── Dynamic score calculation from posts ────────────────────── */
+function calculateDynamicScore(posts, user) {
+    if (!posts || posts.length === 0) {
+        return {
+            meta: user?.metaScore || user?.scoutScore?.metaScore || 0,
+            sport: user?.sportScore || user?.scoutScore?.sportScore || 0,
+            subs: user?.subScores || user?.scoutScore?.subScores || {}
+        };
+    }
+
+    let activityScore = 50;
+    if (posts.length >= 3) activityScore += 50;
+    activityScore += 100;
+
+    const analysed = posts.filter(p => p.aiMetrics && Object.keys(p.aiMetrics).length > 0);
+
+    let sportScore = 0;
+    let subScores = {};
+    if (analysed.length > 0) {
+        let totalAvg = 0;
+        let count = 0;
+        const sums = {};
+        const counts = {};
+
+        analysed.forEach(p => {
+            Object.entries(p.aiMetrics).forEach(([k, v]) => {
+                if (typeof v === 'number') {
+                    sums[k] = (sums[k] || 0) + v;
+                    counts[k] = (counts[k] || 0) + 1;
+                }
+            });
+        });
+
+        Object.keys(sums).forEach(k => {
+            const avg = (sums[k] / counts[k]) * 100;
+            subScores[k] = Math.round(avg);
+            totalAvg += avg;
+            count++;
+        });
+
+        let rawSportScore = count > 0 ? totalAvg / count : 0;
+        let multiplier = 0.8;
+        if (posts.length === 2) multiplier = 0.9;
+        if (posts.length >= 3) multiplier = 1.0;
+
+        sportScore = Math.round(rawSportScore * multiplier);
+    }
+
+    const metaScore = Math.round(sportScore * 0.5 + activityScore);
+    return { meta: metaScore, sport: sportScore, subs: subScores };
 }
 
 /* ═══════════════════════════════════════════════════════════════
    SECTION: Profile Hero
 ═══════════════════════════════════════════════════════════════ */
-function ProfileHero({ user, postCount }) {
+function ProfileHero({ user, postCount, dynamicScore }) {
     const color = sportColor(user.sport);
-    const metaScore = user.scoutScore?.metaScore || 0;
-    const sportScore = user.scoutScore?.sportScore || 0;
+    const metaScore = dynamicScore?.meta || user.metaScore || user.scoutScore?.metaScore || 0;
+    const sportScore = dynamicScore?.sport || user.sportScore || user.scoutScore?.sportScore || 0;
 
     const waPhone = user.phoneNumber?.replace(/\D/g, '');
 
@@ -86,7 +154,7 @@ function ProfileHero({ user, postCount }) {
                 </div>
 
                 {/* Location */}
-                <p className="pfp-location">📍 {user.location}</p>
+                <p className="pfp-location"><Icons.MapPin /> {user.location}</p>
 
                 {/* Contact buttons */}
                 <div className="pfp-contact-row">
@@ -165,10 +233,11 @@ function ProfileHero({ user, postCount }) {
 /* ═══════════════════════════════════════════════════════════════
    SECTION: Performance Charts
 ═══════════════════════════════════════════════════════════════ */
-function PerformanceCharts({ posts, user }) {
+function PerformanceCharts({ posts, user, dynamicScore }) {
     const color = sportColor(user.sport);
     const chartData = buildChartData(posts);
-    const radarData = buildRadarData(user.scoutScore, user.sport);
+    const radarData = buildRadarData({ subScores: dynamicScore?.subs || user.subScores || user.scoutScore?.subScores }, user.sport);
+    const analysedCount = posts.filter(p => p.aiMetrics && Object.keys(p.aiMetrics).length > 0).length;
 
     const CustomTooltip = ({ active, payload, label }) => {
         if (!active || !payload?.length) return null;
@@ -187,7 +256,7 @@ function PerformanceCharts({ posts, user }) {
     if (!chartData.length) {
         return (
             <div className="pfp-chart-empty">
-                <span>📊</span>
+                <span style={{ color: '#94a3b8', display: 'inline-block', marginBottom: '12px' }}><Icons.BarChart /></span>
                 <p>Post videos to unlock performance charts</p>
             </div>
         );
@@ -197,7 +266,7 @@ function PerformanceCharts({ posts, user }) {
         <div className="pfp-charts-section">
             <div className="pfp-section-header">
                 <h2 className="pfp-section-title">Performance Analytics</h2>
-                <span className="pfp-section-sub">Based on {posts.length} AI-analysed posts</span>
+                <span className="pfp-section-sub">Based on {analysedCount} AI-analysed posts</span>
             </div>
 
             <div className="pfp-charts-grid">
@@ -214,7 +283,7 @@ function PerformanceCharts({ posts, user }) {
                             </defs>
                             <CartesianGrid strokeDasharray="3 6" stroke="rgba(255,255,255,0.05)" />
                             <XAxis dataKey="name" tick={{ fill: '#64748b', fontSize: 11 }} axisLine={false} tickLine={false} />
-                            <YAxis domain={[0, 10]} tick={{ fill: '#64748b', fontSize: 11 }} axisLine={false} tickLine={false} />
+                            <YAxis domain={[0, 100]} tick={{ fill: '#64748b', fontSize: 11 }} axisLine={false} tickLine={false} />
                             <Tooltip content={<CustomTooltip />} />
                             <Area type="monotone" dataKey="score" stroke={color} strokeWidth={2.5}
                                 fill="url(#scoreGrad)" dot={{ fill: color, r: 3, strokeWidth: 0 }}
@@ -252,7 +321,7 @@ function PostsGrid({ posts }) {
     if (!posts.length) {
         return (
             <div className="pfp-section-empty">
-                <span>🎬</span>
+                <span style={{ color: '#94a3b8', display: 'inline-block', marginBottom: '12px' }}><Icons.Clapperboard /></span>
                 <p>No posts yet</p>
             </div>
         );
@@ -316,7 +385,7 @@ function AnalysisHistory({ posts, user }) {
     if (!analysed.length) {
         return (
             <div className="pfp-section-empty">
-                <span>🤖</span>
+                <span style={{ color: '#94a3b8', display: 'inline-block', marginBottom: '12px' }}><Icons.Bot /></span>
                 <p>No AI analyses yet — upload a video to get started</p>
             </div>
         );
@@ -406,19 +475,21 @@ const ProfilePage = ({ user }) => {
 
     useEffect(() => { fetchPosts(); }, [fetchPosts]);
 
+    const dynamicScore = useMemo(() => calculateDynamicScore(posts, user), [posts, user]);
+
     if (!user) return null;
 
     return (
         <div className="pfp-page">
             {/* Hero */}
-            <ProfileHero user={user} postCount={posts.length} />
+            <ProfileHero user={user} postCount={posts.length} dynamicScore={dynamicScore} />
 
             {/* Tab bar */}
             <div className="pfp-tabs">
                 {[
-                    { id: 'charts', label: '📊 Analytics' },
-                    { id: 'posts', label: '🎬 Posts' },
-                    { id: 'analysis', label: '🤖 AI History' },
+                    { id: 'charts', label: <><Icons.BarChart /> Analytics</> },
+                    { id: 'posts', label: <><Icons.Clapperboard /> Posts</> },
+                    { id: 'analysis', label: <><Icons.Bot /> AI History</> },
                 ].map(t => (
                     <button
                         key={t.id}
@@ -440,7 +511,7 @@ const ProfilePage = ({ user }) => {
                     </div>
                 ) : (
                     <>
-                        {tab === 'charts' && <PerformanceCharts posts={posts} user={user} />}
+                        {tab === 'charts' && <PerformanceCharts posts={posts} user={user} dynamicScore={dynamicScore} />}
                         {tab === 'posts' && <PostsGrid posts={posts} />}
                         {tab === 'analysis' && <AnalysisHistory posts={posts} user={user} />}
                     </>

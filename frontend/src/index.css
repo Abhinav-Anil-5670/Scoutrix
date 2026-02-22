@@ -1,5 +1,5 @@
 :root {
-  /* Theme: Arctic Precision */
+  /* Theme: Arctic Precision (Dark Mode - Default) */
   --bg-color: #0a1128;
   --card-bg: #16213e;
   --accent-color: #00e5ff;
@@ -9,6 +9,16 @@
   --font-heading: 'Bebas Neue', sans-serif;
   --font-label: 'Barlow Condensed', sans-serif;
   --font-body: 'Barlow', sans-serif;
+}
+
+:root[data-theme='light'] {
+  /* High-Contrast Professional Light Mode */
+  --bg-color: #f8fafc;
+  --card-bg: #ffffff;
+  --accent-color: #0284c7;
+  /* Slightly darker cyan/blue for visibility */
+  --text-main: #0f172a;
+  --text-muted: #475569;
 }
 
 * {

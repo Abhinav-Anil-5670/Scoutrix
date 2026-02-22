@@ -41,13 +41,47 @@ const generateNarrative = post => {
     const topKey = numKeys.sort((a, b) => metrics[b] - metrics[a])[0];
     const topVal = metrics[topKey];
     const topLabel = topKey.replace(/_/g, ' ').replace(/score|rating/i, '').trim();
-    return [
-        meta >= 700 ? `⚡ Elite performer — MetaScore ${meta} puts them in the top tier of ${sport || 'their sport'}.` : null,
-        topVal >= 8.5 ? `🔥 Exceptional ${topLabel} of ${topVal}/10 — recruiter-grade standout metric.` : null,
-        role ? `📊 Scouted as a ${role} — AI confirms strong positional awareness.` : null,
-        post.scoutSummary ? `🎯 "${post.scoutSummary}"` : null,
-        `💡 ${numKeys.length} AI performance metrics extracted from this session.`,
-    ].filter(Boolean)[0];
+
+    const IconWrapper = ({ children, color }) => (
+        <span style={{ display: 'inline-flex', alignItems: 'center', marginRight: '6px', color: color || 'inherit', transform: 'translateY(2px)' }}>
+            {children}
+        </span>
+    );
+
+    const narrativeOptions = [
+        meta >= 700 ? (
+            <span key="1">
+                <IconWrapper color="#00e5a0"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" /></svg></IconWrapper>
+                Elite performer — MetaScore {meta} puts them in the top tier of {sport || 'their sport'}.
+            </span>
+        ) : null,
+        topVal >= 8.5 ? (
+            <span key="2">
+                <IconWrapper color="#fbbf24"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg></IconWrapper>
+                Exceptional {topLabel} of {topVal}/10 — recruiter-grade standout metric.
+            </span>
+        ) : null,
+        role ? (
+            <span key="3">
+                <IconWrapper color="#a78bfa"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="20" x2="18" y2="10" /><line x1="12" y1="20" x2="12" y2="4" /><line x1="6" y1="20" x2="6" y2="14" /></svg></IconWrapper>
+                Scouted as a {role} — AI confirms strong positional awareness.
+            </span>
+        ) : null,
+        post.scoutSummary ? (
+            <span key="4">
+                <IconWrapper color="#38bdf8"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="6" /><circle cx="12" cy="12" r="2" /></svg></IconWrapper>
+                "{post.scoutSummary}"
+            </span>
+        ) : null,
+        (
+            <span key="5">
+                <IconWrapper color="#f472b6"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18h6" /><path d="M10 22h4" /><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1.45.62 2.84 1.5 3.5.76.76 1.23 1.52 1.41 2.5" /></svg></IconWrapper>
+                {numKeys.length} AI performance metrics extracted from this session.
+            </span>
+        ),
+    ];
+
+    return narrativeOptions.filter(Boolean)[0];
 };
 
 /* ── INDIAN REGIONS ── */
@@ -84,11 +118,16 @@ const MetricBar = ({ label, value }) => {
 };
 
 /* ── Athlete Card ── */
-const AthleteCard = ({ post, showDetails, showScores }) => {
+const AthleteCard = ({ post, showDetails, showScores, user }) => {
+    const a = post.athleteId;
+
+    // Check initial saved status from the passed user object (from localStorage)
+    const initialSaved = user?.savedPlayers?.includes(a?._id) || false;
+
     const [expanded, setExpanded] = useState(false);
     const [saving, setSaving] = useState(false);
-    const [saved, setSaved] = useState(false);
-    const a = post.athleteId;
+    const [saved, setSaved] = useState(initialSaved);
+
     if (!a) return null;
 
     const color = getSportColor(a.sport);
@@ -102,7 +141,23 @@ const AthleteCard = ({ post, showDetails, showScores }) => {
         setSaving(true);
         try {
             const r = await fetch(`${API}/users/save/${a._id}`, { method: 'POST', credentials: 'include' });
-            if (r.ok) setSaved(v => !v);
+            if (r.ok) {
+                setSaved(v => !v);
+
+                // Keep the global localStorage in sync so refreshing/navigating preserves the state
+                const userStr = localStorage.getItem('scoutrixUser');
+                if (userStr) {
+                    let u = JSON.parse(userStr);
+                    if (!u.savedPlayers) u.savedPlayers = [];
+
+                    if (u.savedPlayers.includes(a._id)) {
+                        u.savedPlayers = u.savedPlayers.filter(id => id !== a._id);
+                    } else {
+                        u.savedPlayers.push(a._id);
+                    }
+                    localStorage.setItem('scoutrixUser', JSON.stringify(u));
+                }
+            }
         } catch (_) { }
         setSaving(false);
     };
@@ -117,7 +172,10 @@ const AthleteCard = ({ post, showDetails, showScores }) => {
                     </div>
                     <div className="re-athlete-meta">
                         <span className="re-athlete-name">{a.name}</span>
-                        <span className="re-athlete-loc">📍 {a.location || 'India'}</span>
+                        <span className="re-athlete-loc">
+                            <svg style={{ display: 'inline-block', marginRight: '2px', transform: 'translateY(1px)' }} width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>
+                            {a.location || 'India'}
+                        </span>
                     </div>
                 </div>
                 <div className="re-card-right">
@@ -137,7 +195,7 @@ const AthleteCard = ({ post, showDetails, showScores }) => {
             )}
 
             {/* Narrative */}
-            <p className="re-narrative">{narrative}</p>
+            <p className="re-narrative" style={{ display: 'flex', alignItems: 'flex-start' }}>{narrative}</p>
 
             {/* Scout scores */}
             {showScores && (
@@ -227,9 +285,18 @@ const LiveBar = ({ posts }) => {
     const topScore = scores.length ? Math.max(...scores) : null;
     return (
         <div className="re-live-bar">
-            <span className="re-live-item">📡 <strong>{posts.length}</strong> athletes in feed</span>
-            {topSport && <span className="re-live-item">🏆 <strong>{topSport[1]}</strong> in <strong>{topSport[0]}</strong></span>}
-            {topScore && <span className="re-live-item">⚡ Top Score: <strong style={{ color: '#00e5a0' }}>{topScore}</strong></span>}
+            <span className="re-live-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="2" /><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14" /></svg>
+                <strong>{posts.length}</strong> athletes in feed
+            </span>
+            {topSport && <span className="re-live-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="8 21 16 21 16 17 8 17 8 21" /><path d="M16 13C16 10.7909 14.2091 9 12 9C9.79086 9 8 10.7909 8 13C8 14.6569 9.34315 16 11 16H13C14.6569 16 16 14.6569 16 13Z" strokeWidth="2" /><path d="M5 9V11C5 12.1046 5.89543 13 7 13H8" /><path d="M19 9V11C19 12.1046 18.1046 13 17 13H16" /></svg>
+                <strong>{topSport[1]}</strong> in <strong>{topSport[0]}</strong>
+            </span>}
+            {topScore && <span className="re-live-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00e5a0" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" /></svg>
+                Top Score: <strong style={{ color: '#00e5a0' }}>{topScore}</strong>
+            </span>}
         </div>
     );
 };
@@ -249,7 +316,6 @@ const RecruiterExplore = ({ user }) => {
     const [showDetails, setShowDetails] = useState(true);
     const [showScores, setShowScores] = useState(true);
     const [searchQ, setSearchQ] = useState('');
-    const [filterOpen, setFilterOpen] = useState(false);
 
     useEffect(() => {
         (async () => {
@@ -384,13 +450,24 @@ const RecruiterExplore = ({ user }) => {
                     <div className="re-state"><div className="re-spinner" /><p>Fetching athlete feed…</p></div>
                 )}
                 {error === '__auth__' && (
-                    <div className="re-state"><span>🔐</span><p>Please log in to view the feed.</p></div>
+                    <div className="re-state">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
+                        <p>Please log in to view the feed.</p>
+                    </div>
                 )}
                 {error && error !== '__auth__' && (
-                    <div className="re-state re-state--err"><span>⚠️</span><p>{error}</p></div>
+                    <div className="re-state re-state--err">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
+                        <p>{error}</p>
+                    </div>
                 )}
                 {!loading && !error && filtered.length === 0 && (
-                    <div className="re-state"><span className="re-empty-icon">🏟️</span><p>No athletes match your filters.</p></div>
+                    <div className="re-state">
+                        <span className="re-empty-icon">
+                            <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2" /></svg>
+                        </span>
+                        <p>No athletes match your filters.</p>
+                    </div>
                 )}
                 {!loading && !error && filtered.map(post => (
                     <AthleteCard
@@ -398,6 +475,7 @@ const RecruiterExplore = ({ user }) => {
                         post={post}
                         showDetails={showDetails}
                         showScores={showScores}
+                        user={user}
                     />
                 ))}
             </div>

@@ -118,7 +118,7 @@
 
 .ar-hint {
     font-size: 11px;
-    color: #64748b;
+    color: var(--text-muted, #64748b);
     margin-top: 4px;
 }
 
@@ -276,4 +276,37 @@
         width: 100%;
         justify-content: center;
     }
+}
+
+/* ── Light theme support ── */
+[data-theme='light'] .ar-page {
+    --bg-surface: #ffffff;
+    --text-primary: var(--text-main, #0f172a);
+    --text-secondary: #334155;
+    --border: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme='light'] .ar-form {
+    background: var(--card-bg, #ffffff);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+}
+
+[data-theme='light'] .ar-group input,
+[data-theme='light'] .ar-group select {
+    background: #f8fafc;
+    border-color: rgba(0, 0, 0, 0.15);
+    color: #0f172a;
+}
+
+[data-theme='light'] .ar-group option {
+    background: #ffffff;
+    color: #0f172a;
+}
+
+[data-theme='light'] .ar-info-panel h3 {
+    color: var(--text-primary);
+}
+
+[data-theme='light'] .ar-steps strong {
+    color: var(--text-primary);
 }

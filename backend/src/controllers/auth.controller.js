@@ -81,6 +81,7 @@ exports.register = async (req, res) => {
                 height: user.height,
                 weight: user.weight,
                 scoutScore: user.scoutScore,
+                savedPlayers: user.savedPlayers,
                 token
             });
         } else {
@@ -130,6 +131,7 @@ exports.login = async (req, res) => {
                 height: user.height,
                 weight: user.weight,
                 scoutScore: user.scoutScore,
+                savedPlayers: user.savedPlayers,
                 token
             });
         } else {

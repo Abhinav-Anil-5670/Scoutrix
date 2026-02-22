@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import VideoPoseOverlay from './VideoPoseOverlay';
+import Icons from '../components/Icons';
 import './AIVideoAnalysis.css';
 
 /* ─── Sport metrics definitions ────────────────────────────────── */
@@ -7,43 +8,43 @@ const SPORTS = [
     {
         id: 'cricket',
         label: 'Cricket',
-        emoji: '🏏',
+        emoji: <Icons.Cricket />,
         color: '#00e5a0',
         colorRgb: '0,229,160',
         metrics: [
-            { key: 'Bowling Speed', unit: 'km/h', min: 110, max: 145, icon: '⚡' },
-            { key: 'Batting Reaction', unit: 'ms', min: 180, max: 320, icon: '👁️' },
-            { key: 'Throw Distance', unit: 'm', min: 40, max: 85, icon: '🎯' },
-            { key: 'Footwork Rating', unit: '/10', min: 6, max: 10, icon: '👟' },
-            { key: 'Shot Power Index', unit: '%', min: 60, max: 98, icon: '💪' },
+            { key: 'Bowling Speed', unit: 'km/h', min: 110, max: 145, icon: <Icons.Zap /> },
+            { key: 'Batting Reaction', unit: 'ms', min: 180, max: 320, icon: <Icons.Eye /> },
+            { key: 'Throw Distance', unit: 'm', min: 40, max: 85, icon: <Icons.Target /> },
+            { key: 'Footwork Rating', unit: '/10', min: 6, max: 10, icon: <Icons.Shoe /> },
+            { key: 'Shot Power Index', unit: '%', min: 60, max: 98, icon: <Icons.Arm /> },
         ],
     },
     {
         id: 'football',
         label: 'Football',
-        emoji: '⚽',
+        emoji: <Icons.Football />,
         color: '#a78bfa',
         colorRgb: '167,139,250',
         metrics: [
-            { key: 'Sprint Speed', unit: 'km/h', min: 22, max: 36, icon: '🏃' },
-            { key: 'Kick Distance', unit: 'm', min: 25, max: 60, icon: '🦵' },
-            { key: 'Agility Score', unit: '/10', min: 6, max: 10, icon: '🔀' },
-            { key: 'Pressing Intensity', unit: '%', min: 55, max: 97, icon: '⚡' },
-            { key: 'Dribble Accuracy', unit: '%', min: 60, max: 95, icon: '🎯' },
+            { key: 'Sprint Speed', unit: 'km/h', min: 22, max: 36, icon: <Icons.Run /> },
+            { key: 'Kick Distance', unit: 'm', min: 25, max: 60, icon: <Icons.Leg /> },
+            { key: 'Agility Score', unit: '/10', min: 6, max: 10, icon: <Icons.Shuffle /> },
+            { key: 'Pressing Intensity', unit: '%', min: 55, max: 97, icon: <Icons.Zap /> },
+            { key: 'Dribble Accuracy', unit: '%', min: 60, max: 95, icon: <Icons.Target /> },
         ],
     },
     {
         id: 'badminton',
         label: 'Badminton',
-        emoji: '🏸',
+        emoji: <Icons.Badminton />,
         color: '#fbbf24',
         colorRgb: '251,191,36',
         metrics: [
-            { key: 'Smash Speed', unit: 'km/h', min: 120, max: 380, icon: '💥' },
-            { key: 'Reaction Time', unit: 'ms', min: 140, max: 280, icon: '⚡' },
-            { key: 'Rally Endurance', unit: 'shots', min: 12, max: 45, icon: '🔁' },
-            { key: 'Net Accuracy', unit: '%', min: 65, max: 96, icon: '🎯' },
-            { key: 'Court Coverage', unit: '%', min: 55, max: 94, icon: '🏟️' },
+            { key: 'Smash Speed', unit: 'km/h', min: 120, max: 380, icon: <Icons.Flame /> },
+            { key: 'Reaction Time', unit: 'ms', min: 140, max: 280, icon: <Icons.Zap /> },
+            { key: 'Rally Endurance', unit: 'shots', min: 12, max: 45, icon: <Icons.Repeat /> },
+            { key: 'Net Accuracy', unit: '%', min: 65, max: 96, icon: <Icons.Target /> },
+            { key: 'Court Coverage', unit: '%', min: 55, max: 94, icon: <Icons.Stadium /> },
         ],
     },
 ];
@@ -113,7 +114,7 @@ const UploadStep = ({ onUpload }) => {
                 }}
                 onClick={() => inputRef.current?.click()}
             >
-                <div className="ava-drop-icon">🎬</div>
+                <div className="ava-drop-icon"><Icons.Video /></div>
                 <p className="ava-drop-primary">
                     {dragging ? 'Drop to analyse' : 'Drag & drop your video here'}
                 </p>
@@ -333,7 +334,7 @@ const ResultsStep = ({ sport, video, results, onReset }) => {
                         className={`ava-overlay-toggle ${overlayOn ? 'on' : ''}`}
                         onClick={() => setOverlayOn(v => !v)}
                     >
-                        {overlayOn ? '🔵 Overlay ON' : '⚫ Overlay OFF'}
+                        {overlayOn ? <><span style={{ color: '#3b82f6', marginRight: '6px' }}>●</span> Overlay ON</> : <><span style={{ color: '#64748b', marginRight: '6px' }}>●</span> Overlay OFF</>}
                     </button>
                     <span className="ava-overlay-hint">Hover pins for details</span>
                 </div>

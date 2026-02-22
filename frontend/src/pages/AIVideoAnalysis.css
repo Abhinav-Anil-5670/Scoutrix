@@ -937,3 +937,41 @@
     line-height: 1;
     padding: 8px;
 }
+
+/* ── Light theme support ── */
+[data-theme='light'] .ava-page {
+    --bg-surface: #ffffff;
+    --bg-primary: #f8fafc;
+    --text-primary: var(--text-main, #0f172a);
+    --text-secondary: #334155;
+    --text-muted: #64748b;
+    --border: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme='light'] .ava-sport-card,
+[data-theme='light'] .ava-metric-card,
+[data-theme='light'] .ava-score-band,
+[data-theme='light'] .ava-stickman-box,
+[data-theme='light'] .ava-ref-panel {
+    background: #ffffff;
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme='light'] .ava-badge {
+    color: #059669;
+    /* Darker green for readability */
+    border-color: rgba(5, 150, 105, 0.3);
+    background: rgba(5, 150, 105, 0.08);
+}
+
+[data-theme='light'] .ava-drop-zone {
+    background: #f8fafc;
+    border-color: rgba(0, 0, 0, 0.12);
+}
+
+[data-theme='light'] .ava-preview-box,
+[data-theme='light'] .ava-overlay-wrap,
+[data-theme='light'] .ava-ref-canvas-wrap {
+    background: #f1f5f9;
+    border-color: rgba(0, 0, 0, 0.1);
+}

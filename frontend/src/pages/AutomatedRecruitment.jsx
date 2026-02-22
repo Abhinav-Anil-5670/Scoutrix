@@ -72,7 +72,9 @@ const AutomatedRecruitment = () => {
     return (
         <div className="ar-page">
             <div className="ar-header">
-                <span className="ar-icon">🎯</span>
+                <span className="ar-icon">
+                    <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="6" /><circle cx="12" cy="12" r="2" /></svg>
+                </span>
                 <h1 className="ar-title">Targeted AI Shortlisting</h1>
                 <p className="ar-subtitle">
                     Enter your requirements and our AI Engine will find, rank, and export the top matching athletes into a beautiful PDF report.
@@ -162,7 +164,12 @@ const AutomatedRecruitment = () => {
                             {loading ? (
                                 <><span className="ar-spinner" /> Processing Shortlist...</>
                             ) : (
-                                <><span>⚡</span> Generate & Download PDF Report</>
+                                <>
+                                    <span style={{ display: 'flex', alignItems: 'center' }}>
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" /></svg>
+                                    </span>
+                                    Generate & Download PDF Report
+                                </>
                             )}
                         </button>
                     </div>

@@ -1,10 +1,13 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import './Footer.css';
 
 const Footer = () => {
+    const location = useLocation();
+    const isDashboard = location.pathname.startsWith('/dashboard');
+
     return (
-        <footer className="footer-container">
+        <footer className={`footer-container ${isDashboard ? 'footer-dashboard-adjusted' : ''}`}>
             <div className="footer-content">
                 <div className="footer-brand">
                     <div className="footer-logo">

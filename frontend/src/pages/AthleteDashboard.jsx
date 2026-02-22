@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ExplorePage from './ExplorePage';
 import AIVideoAnalysis from './AIVideoAnalysis';
 import PostPage from './PostPage';
@@ -80,7 +80,11 @@ const NAV_ITEMS = [
 const PlaceholderSection = ({ id, label, color }) => (
     <div className="placeholder-section">
         <div className="placeholder-pulse" style={{ background: color }} />
-        <div className="placeholder-icon">🚧</div>
+        <div className="placeholder-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: color }}>
+                <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+            </svg>
+        </div>
         <h2>{label}</h2>
         <p>This section is coming soon.</p>
     </div>
@@ -109,10 +113,18 @@ const AthleteDashboard = ({ user }) => {
     const [activeTab, setActiveTab] = useState('explore');
     const [theme, setTheme] = useState(() => {
         const saved = localStorage.getItem('scoutrixTheme') || 'dark';
-        // Apply to document root so Navbar CSS can respond
         document.documentElement.setAttribute('data-theme', saved);
         return saved;
     });
+
+    useEffect(() => {
+        // Ensure the theme is set on mount
+        document.documentElement.setAttribute('data-theme', theme);
+        return () => {
+            // Clean up when leaving dashboard, to prevent light themed navbar on landing pages
+            document.documentElement.removeAttribute('data-theme');
+        };
+    }, []);
 
     const toggleTheme = () => {
         const next = theme === 'dark' ? 'light' : 'dark';
@@ -135,17 +147,7 @@ const AthleteDashboard = ({ user }) => {
 
     return (
         <div className="ad-shell" data-theme={theme}>
-            {/* ── Floating theme toggle — no bar, no dot ── */}
-            <header className="ad-topbar">
-                <button
-                    className="ad-theme-toggle"
-                    onClick={toggleTheme}
-                    aria-label="Toggle theme"
-                    title={theme === 'dark' ? 'Switch to Light' : 'Switch to Dark'}
-                >
-                    {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
-                </button>
-            </header>
+
 
             {/* ── Main content area ── */}
             <main className="ad-content">
@@ -172,6 +174,18 @@ const AthleteDashboard = ({ user }) => {
                         </button>
                     );
                 })}
+                <button
+                    className="ad-tab theme-toggle-tab"
+                    onClick={toggleTheme}
+                    aria-label="Toggle theme"
+                    title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+                    style={{ '--tab-color': 'var(--text-primary)' }}
+                >
+                    <span className="ad-tab-icon">
+                        {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
+                    </span>
+                    <span className="ad-tab-label">{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
+                </button>
             </nav>
 
         </div>

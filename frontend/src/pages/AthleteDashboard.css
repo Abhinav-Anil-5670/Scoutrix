@@ -5,36 +5,36 @@
 
 /* ── CSS Variables — Dark theme (default) ── */
 .ad-shell[data-theme="dark"] {
-    --bg-primary: #060810;
-    --bg-surface: rgba(255, 255, 255, 0.03);
-    --bg-surface-2: rgba(255, 255, 255, 0.06);
-    --bg-nav: rgba(10, 14, 28, 0.92);
+    --bg-primary: #0a1128;
+    --bg-surface: #16213e;
+    --bg-surface-2: rgba(22, 33, 62, 0.6);
+    --bg-nav: rgba(10, 17, 40, 0.95);
     --border: rgba(255, 255, 255, 0.08);
     --border-active: rgba(255, 255, 255, 0.15);
-    --text-primary: #f1f5f9;
-    --text-secondary: #94a3b8;
-    --text-muted: #475569;
-    --accent: #00e5a0;
-    --accent-soft: rgba(0, 229, 160, 0.12);
+    --text-primary: #ffffff;
+    --text-secondary: #b4c5e4;
+    --text-muted: #8a9bb0;
+    --accent: #00e5ff;
+    --accent-soft: rgba(0, 229, 255, 0.12);
     --shadow-nav: 0 -1px 0 rgba(255, 255, 255, 0.05), 0 -20px 40px rgba(0, 0, 0, 0.4);
-    --topbar-bg: rgba(6, 8, 16, 0.85);
+    --topbar-bg: transparent;
 }
 
 /* ── CSS Variables — Light theme ── */
 .ad-shell[data-theme="light"] {
-    --bg-primary: #f0f4f8;
-    --bg-surface: rgba(255, 255, 255, 0.7);
-    --bg-surface-2: rgba(255, 255, 255, 0.9);
-    --bg-nav: rgba(255, 255, 255, 0.95);
-    --border: rgba(0, 0, 0, 0.08);
-    --border-active: rgba(0, 0, 0, 0.15);
+    --bg-primary: #f8fafc;
+    --bg-surface: #ffffff;
+    --bg-surface-2: #f1f5f9;
+    --bg-nav: rgba(255, 255, 255, 0.98);
+    --border: #e2e8f0;
+    --border-active: #cbd5e1;
     --text-primary: #0f172a;
     --text-secondary: #475569;
-    --text-muted: #94a3b8;
-    --accent: #059669;
-    --accent-soft: rgba(5, 150, 105, 0.1);
+    --text-muted: #64748b;
+    --accent: #0284c7;
+    --accent-soft: rgba(2, 132, 199, 0.1);
     --shadow-nav: 0 -1px 0 rgba(0, 0, 0, 0.06), 0 -8px 32px rgba(0, 0, 0, 0.08);
-    --topbar-bg: rgba(240, 244, 248, 0.92);
+    --topbar-bg: transparent;
 }
 
 /* ── Shell layout ── */
@@ -47,86 +47,7 @@
     transition: background 0.3s ease, color 0.3s ease;
 }
 
-/* ── Top bar ── */
-.ad-topbar {
-    position: fixed;
-    top: 60px;
-    left: 0;
-    right: 0;
-    height: 44px;
-    z-index: 800;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    /* toggle floats to the right */
-    padding: 0 16px;
-    background: transparent;
-    /* no bar — fully invisible */
-    border-bottom: none;
-    pointer-events: none;
-    /* clicks pass through empty areas */
-    transition: none;
-}
 
-.ad-topbar-left {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.ad-live-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--accent);
-    animation: pulse-live 2s infinite;
-}
-
-@keyframes pulse-live {
-
-    0%,
-    100% {
-        opacity: 1;
-        box-shadow: 0 0 0 0 var(--accent);
-    }
-
-    50% {
-        opacity: 0.7;
-        box-shadow: 0 0 0 5px transparent;
-    }
-}
-
-.ad-section-label {
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--text-primary);
-    letter-spacing: -0.3px;
-    transition: color 0.2s ease;
-}
-
-/* Re-enable pointer events on the toggle itself */
-.ad-theme-toggle {
-    pointer-events: all;
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--bg-surface-2);
-    border: 1px solid var(--border);
-    color: var(--text-secondary);
-    cursor: pointer;
-    transition: all 0.2s ease;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-}
-
-.ad-theme-toggle:hover {
-    color: var(--accent);
-    border-color: var(--accent);
-    background: var(--accent-soft);
-}
 
 /* ── Main content ── */
 .ad-content {
@@ -321,6 +242,10 @@
     /* On tablets/desktop — side nav instead of bottom nav */
     .ad-shell {
         flex-direction: row;
+    }
+
+    .theme-toggle-tab {
+        margin-top: auto;
     }
 
     .ad-bottom-nav {
